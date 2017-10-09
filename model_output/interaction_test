@@ -1,0 +1,102 @@
+// generated with brms 1.8.0
+functions { 
+} 
+data { 
+  int<lower=1> N;  // total number of observations 
+  int Y[N];  // response variable 
+  int<lower=1> K;  // number of population-level effects 
+  matrix[N, K] X;  // population-level design matrix 
+  // data for group-level effects of ID 1 
+  int<lower=1> J_1[N]; 
+  int<lower=1> N_1; 
+  int<lower=1> M_1; 
+  vector[N] Z_1_1; 
+  // data for group-level effects of ID 2 
+  int<lower=1> J_2[N]; 
+  int<lower=1> N_2; 
+  int<lower=1> M_2; 
+  vector[N] Z_2_1; 
+  // data for group-level effects of ID 3 
+  int<lower=1> J_3[N]; 
+  int<lower=1> N_3; 
+  int<lower=1> M_3; 
+  vector[N] Z_3_1; 
+  // data for group-level effects of ID 4 
+  int<lower=1> J_4[N]; 
+  int<lower=1> N_4; 
+  int<lower=1> M_4; 
+  vector[N] Z_4_1; 
+  // data for group-level effects of ID 5 
+  int<lower=1> J_5[N]; 
+  int<lower=1> N_5; 
+  int<lower=1> M_5; 
+  vector[N] Z_5_1; 
+  int prior_only;  // should the likelihood be ignored? 
+} 
+transformed data { 
+  int Kc = K - 1; 
+  matrix[N, K - 1] Xc;  // centered version of X 
+  vector[K - 1] means_X;  // column means of X before centering 
+  for (i in 2:K) { 
+    means_X[i - 1] = mean(X[, i]); 
+    Xc[, i - 1] = X[, i] - means_X[i - 1]; 
+  } 
+} 
+parameters { 
+  vector[Kc] b;  // population-level effects 
+  real temp_Intercept;  // temporary intercept 
+  vector<lower=0>[M_1] sd_1;  // group-level standard deviations 
+  vector[N_1] z_1[M_1];  // unscaled group-level effects 
+  vector<lower=0>[M_2] sd_2;  // group-level standard deviations 
+  vector[N_2] z_2[M_2];  // unscaled group-level effects 
+  vector<lower=0>[M_3] sd_3;  // group-level standard deviations 
+  vector[N_3] z_3[M_3];  // unscaled group-level effects 
+  vector<lower=0>[M_4] sd_4;  // group-level standard deviations 
+  vector[N_4] z_4[M_4];  // unscaled group-level effects 
+  vector<lower=0>[M_5] sd_5;  // group-level standard deviations 
+  vector[N_5] z_5[M_5];  // unscaled group-level effects 
+} 
+transformed parameters { 
+  // group-level effects 
+  vector[N_1] r_1_1 = sd_1[1] * (z_1[1]); 
+  // group-level effects 
+  vector[N_2] r_2_1 = sd_2[1] * (z_2[1]); 
+  // group-level effects 
+  vector[N_3] r_3_1 = sd_3[1] * (z_3[1]); 
+  // group-level effects 
+  vector[N_4] r_4_1 = sd_4[1] * (z_4[1]); 
+  // group-level effects 
+  vector[N_5] r_5_1 = sd_5[1] * (z_5[1]); 
+} 
+model { 
+  vector[N] mu = Xc * b + temp_Intercept; 
+  for (n in 1:N) { 
+    mu[n] = mu[n] + (r_1_1[J_1[n]]) * Z_1_1[n] + (r_2_1[J_2[n]]) * Z_2_1[n] + (r_3_1[J_3[n]]) * Z_3_1[n] + (r_4_1[J_4[n]]) * Z_4_1[n] + (r_5_1[J_5[n]]) * Z_5_1[n]; 
+  } 
+  // prior specifications 
+  b[1] ~ normal(0,2); 
+  b[2] ~ normal(3.4,2); 
+  b[3] ~ normal(3.1,2); 
+  b[4] ~ normal(0,2); 
+  b[5] ~ normal(0,2); 
+  b[6] ~ normal(0,2); 
+  b[7] ~ normal(0,2); 
+  sd_1 ~ normal(0,2); 
+  z_1[1] ~ normal(0, 1); 
+  sd_2 ~ normal(0,2); 
+  z_2[1] ~ normal(0, 1); 
+  sd_3 ~ normal(0,2); 
+  z_3[1] ~ normal(0, 1); 
+  sd_4 ~ normal(0,2); 
+  z_4[1] ~ normal(0, 1); 
+  sd_5 ~ normal(0,2); 
+  z_5[1] ~ normal(0, 1); 
+  // likelihood contribution 
+  if (!prior_only) { 
+    Y ~ bernoulli_logit(mu); 
+  } 
+} 
+generated quantities { 
+  // actual population-level intercept 
+  real b_Intercept = temp_Intercept - dot_product(means_X, b); 
+} 
