@@ -154,16 +154,17 @@ ggplot(sd_type, aes(x = density, fill = standard_deviation)) +
 # there is a 1:1 relationship between the normalized degree of a species and its probability of interacting
 # with another species. In other words, the probability of observing an interaction is the same as
 # the normalized degree. Let's get some intuition as to what this prior looks like when normalized degree
-# is on a standardized scale (1 SD above and below the mean).
-pSpec_sp1 <- mean(network.df$normalized_degree_sp_1) - sd(network.df$normalized_degree_sp_1) # probability of a relatively specialized species interacting
+# is on a standardized scale (1 SD above the mean). I chose to only look above because the normalized degree of species
+# ranges up to 3 SD above the mean, so looking from the mean to +1 SD covers much of the data range.
+pMean_sp1 <- mean(network.df$normalized_degree_sp_1) # probability of average species interacting
 pGen_sp1 <- mean(network.df$normalized_degree_sp_1) + sd(network.df$normalized_degree_sp_1) # probability of a relatively generalized species interacting
 
-mu_sc.norm_deg_sp1 <- log(pGen_sp1 / (1-pGen_sp1)) - log(pSpec_sp1 / (1-pSpec_sp1)) # logistic regression coefficient, which is the difference in log-odds for 1 standardized unit increase in a species normalized degree.
+mu_sc.norm_deg_sp1 <- log(pGen_sp1 / (1-pGen_sp1)) - log(pMean_sp1 / (1-pMean_sp1)) # logistic regression coefficient, which is the difference in log-odds for 1 standardized unit increase in a species normalized degree.
 
-pSpec_sp2 <- mean(network.df$normalized_degree_sp_2) - sd(network.df$normalized_degree_sp_2) # probability of a relatively specialized species interacting
+pMean_sp2 <- mean(network.df$normalized_degree_sp_2) # probability of average species interacting
 pGen_sp2 <- mean(network.df$normalized_degree_sp_2) + sd(network.df$normalized_degree_sp_2) # probability of a relatively generalized species interacting
 
-mu_sc.norm_deg_sp2 <- log(pGen_sp2 / (1-pGen_sp2)) - log(pSpec_sp2 / (1-pSpec_sp2)) # logistic regression coefficient, which is the difference in log-odds for 1 standardized unit increase in a species normalized degree.
+mu_sc.norm_deg_sp2 <- log(pGen_sp2 / (1-pGen_sp2)) - log(pMean_sp2 / (1-pMean_sp2)) # logistic regression coefficient, which is the difference in log-odds for 1 standardized unit increase in a species normalized degree.
 
 # Now, this is only a prior expectation, and to reflect some uncertainty around this prior, I'm going
 # to specify a normal distribution centered on this mean and explore different variances
@@ -192,8 +193,8 @@ ggplot(sd_sp1, aes(x = density, fill = standard_deviation)) + geom_density(alpha
 
 ## SET PRIORS ----
 interaction.priors <- c(set_prior("normal(0,2)", class = "b", coef = "typeM"),
-                        set_prior("normal(3.4,2)", class = "b", coef = "sc.norm_deg_sp_1"),
-                        set_prior("normal(3.1,2)", class = "b", coef = "sc.norm_deg_sp_2"),
+                        set_prior("normal(1,2)", class = "b", coef = "sc.norm_deg_sp_1"),
+                        set_prior("normal(1,2)", class = "b", coef = "sc.norm_deg_sp_2"),
                         set_prior("normal(0,2)", class = "b", coef = "sc.norm_deg_sp_1:sc.norm_deg_sp_2"),
                         set_prior("normal(0,2)", class = "b", coef = "typeM:sc.norm_deg_sp_1"),
                         set_prior("normal(0,2)", class = "b", coef = "typeM:sc.norm_deg_sp_2"),
