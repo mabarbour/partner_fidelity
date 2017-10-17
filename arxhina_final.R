@@ -209,7 +209,7 @@ interaction.test <- brm(interaction.formula,
                         prior = interaction.priors,
                         algorithm = "sampling",
                         chains = 4,
-                        control = list(adapt_delta = 0.9),
+                        control = list(adapt_delta = 0.95),
                         save_model = "model_output/interaction_test")
 
 # plot(interaction.test) # everything looks good
