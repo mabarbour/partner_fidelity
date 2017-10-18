@@ -4,9 +4,17 @@ author: Matt Barbour
 date: Oct. 18, 2017
 autosize: true
 
+<<<<<<< HEAD
 When should I use a GLMMs?
 ========================================================
 
+=======
+Why GLMMs?
+========================================================
+
+- Flexible and powerful tool for analyzing experimental and observational data.
+- Good for
+>>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 - Non-Normal Data
 - Unbalanced, hierarchical data
 
@@ -39,11 +47,14 @@ When two species co-occur, what determines their probability of interacting?
 - Type of ecological interaction? Mutualistic vs. Antagonistic
 - Normalized degree of a species? 
 
+<<<<<<< HEAD
 Possible ways to Analyze
 =========================
 - Two-sample t-test
 - Kruskal-Wallis test
 
+=======
+>>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 
 Arxhina's Data
 ========================================================

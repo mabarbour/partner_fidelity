@@ -4,9 +4,17 @@ author: Matt Barbour
 date: Oct. 18, 2017
 autosize: true
 
+<<<<<<< HEAD
 When should I use a GLMMs?
 ========================================================
 
+=======
+Why GLMMs?
+========================================================
+
+- Flexible and powerful tool for analyzing experimental and observational data.
+- Good for
+>>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 - Non-Normal Data
 - Unbalanced, hierarchical data
 
@@ -35,11 +43,14 @@ When two species co-occur, what determines their probability of interacting?
 - Type of ecological interaction? Mutualistic vs. Antagonistic
 - Normalized degree of a species? 
 
+<<<<<<< HEAD
 Possible ways to Analyze
 =========================
 - Two-sample t-test
 - Kruskal-Wallis test
 
+=======
+>>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 
 Arxhina's Data
 ========================================================
@@ -47,6 +58,7 @@ Arxhina's Data
 
 ```
 # A tibble: 10 x 5
+<<<<<<< HEAD
    id_pair              species_1                 species_2   type
     <fctr>                  <chr>                     <chr> <fctr>
  1    3625         Neomys fodiens      Palaeopsylla soricis      A
@@ -59,6 +71,20 @@ Arxhina's Data
  8    2004       Trifolium repens            Bombus lucorum      M
  9    2342     Crataegus monogyna                 Pica pica      M
 10    2914     Apodemus uralensis         Neopsylla pleskei      A
+=======
+   id_pair                 species_1                species_2   type
+    <fctr>                     <chr>                    <chr> <fctr>
+ 1    3628            Neomys fodiens  Amalaraeus penicilliger      A
+ 2    1521              Salix repens          Bombus pratorum      M
+ 3    1612            Rubus palmatus          Pidonia puziloi      M
+ 4    1811 Tripleurospermum inodorum            Leptura rubra      M
+ 5    2671                 Inga vera         Coereba flaveola      M
+ 6    3775          Sicista betulina Ctenophthalmus assimilis      A
+ 7    3634        Microtus oeconomus     Palaeopsylla soricis      A
+ 8    3495          Microtus arvalis      Megabothris walkeri      A
+ 9    3429         Microtus agrestis     Amphipsylla sibirica      A
+10    2912        Apodemus uralensis Leptopsylla taschenbergi      A
+>>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 # ... with 1 more variables: connected <int>
 ```
 
@@ -66,6 +92,7 @@ Arxhina's Data
 # A tibble: 10 x 5
    id_pair normalized_degree_sp_1 normalized_degree_sp_2
     <fctr>                  <dbl>                  <dbl>
+<<<<<<< HEAD
  1    3625                 0.1154                 0.7692
  2    2718                 0.0769                 0.0714
  3    1367                 0.3178                 0.1000
@@ -76,6 +103,18 @@ Arxhina's Data
  8    2004                 0.1429                 0.0513
  9    2342                 0.7857                 0.1111
 10    2914                 0.0769                 0.2857
+=======
+ 1    3628                 0.3000                 0.3636
+ 2    1521                 0.4032                 0.1579
+ 3    1612                 0.0566                 0.0351
+ 4    1811                 0.2952                 0.2051
+ 5    2671                 0.2000                 0.1429
+ 6    3775                 0.1923                 0.2593
+ 7    3634                 0.5294                 0.6250
+ 8    3495                 0.6250                 0.6667
+ 9    3429                 0.5385                 0.1852
+10    2912                 0.0513                 0.1765
+>>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 # ... with 2 more variables: subtype <chr>, network_id <fctr>
 ```
 
@@ -89,6 +128,7 @@ Arxhina's Data
 # A tibble: 10 x 3
    id_pair prop_interactions   type
     <fctr>             <dbl> <fctr>
+<<<<<<< HEAD
  1    3593              1.00      A
  2    3102              0.64      A
  3    1763              0.75      M
@@ -99,12 +139,25 @@ Arxhina's Data
  8     957              1.00      M
  9    1287              0.33      M
 10    1929              1.00      M
+=======
+ 1    3632              0.30      A
+ 2     577              0.50      M
+ 3    1433              0.50      M
+ 4    1676              0.67      M
+ 5     612              0.50      M
+ 6    2872              0.50      A
+ 7    1851              1.00      M
+ 8    1975              1.00      M
+ 9     238              0.50      M
+10    2955              0.50      A
+>>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 ```
 
 ```
 # A tibble: 10 x 3
    id_pair mean_norm_deg_sp_1 mean_norm_deg_sp_2
     <fctr>              <dbl>              <dbl>
+<<<<<<< HEAD
  1    3593               0.49               0.32
  2    3102               0.74               0.30
  3    1763               0.06               0.44
@@ -115,6 +168,18 @@ Arxhina's Data
  8     957               0.34               0.03
  9    1287               0.01               0.05
 10    1929               0.02               0.19
+=======
+ 1    3632               0.29               0.34
+ 2     577               0.00               0.05
+ 3    1433               0.03               0.14
+ 4    1676               0.10               0.04
+ 5     612               0.01               0.03
+ 6    2872               0.28               0.49
+ 7    1851               0.07               0.43
+ 8    1975               0.10               0.26
+ 9     238               0.03               0.07
+10    2955               0.21               0.68
+>>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 ```
 
 
