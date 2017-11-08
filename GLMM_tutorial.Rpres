@@ -1,63 +1,30 @@
-Genearlized Linear Mixed-Effect Models (GLMMs)
-========================================================
+Generalized Linear Mixed-Effect Models (GLMMs) Tutorial
+==========================================================
 author: Matt Barbour
 date: Oct. 18, 2017
-autosize: true
-
-<<<<<<< HEAD
-When should I use a GLMMs?
-========================================================
-
-=======
-Why GLMMs?
-========================================================
-
-- Flexible and powerful tool for analyzing experimental and observational data.
-- Good for
->>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
-- Non-Normal Data
-- Unbalanced, hierarchical data
+width: 960
+height: 700
 
 
-Why are they called Generalized Linear Models?
-==============================================
-- Statistical models that assume errors from the exponential family.
-- Data do not have to be normally distributed
-
-```{r, echo = FALSE}
-hist(rbinom(50, 1, prob = 0.5), main = "Binomial Distribution")
-hist(rpois(50, 6), main = "Poisson Distribution")
-hist(rnbinom(50, mu = 4, size = 1), main = "Negative Binomial")
-```
-
-
-Why are they called Mixed-Effect Models?
-========================================================
-
-- Fixed Effects: factors whose effects are experimentally determined, or whose interest lies in the specific effects of each level. 
-- Random Effects: factors whose levels are sampled from a larger population, or whose interest lies in the variation among them rather than the specific effects of each level.
-- Status of particular levels depends on experimental design and context.
+Why Statistical Models?
+=============================
+- Want to measure or test the effect of factors on responses you are interested in
+- Analyzing experimental or observational data
 
 
 Arxhina's Question
 ========================================================
 
 When two species co-occur, what determines their probability of interacting?
+- **Type of Ecological Interaction**
+- **Normalized Degree of each Species**
+- **Statistical interactions** between Normalized Degree and Type of Ecological Interaction
 
-- Type of ecological interaction? Mutualistic vs. Antagonistic
-- Normalized degree of a species? 
-
-<<<<<<< HEAD
-Possible ways to Analyze
-=========================
-- Two-sample t-test
-- Kruskal-Wallis test
-
-=======
->>>>>>> 7089fe989f4740fa24fccee26df547836ab2fc75
 
 Arxhina's Data
 ========================================================
+
+- 4075 unique pairs of interactions
 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -67,18 +34,6 @@ network.df <- read_csv("t_glmm_plus_connectance.csv") %>%
          id_pair = as.factor(id_pair),
          type = as.factor(type))
 
-sub.network <- sample_n(network.df, size = 10)
-
-sub.network %>% select(id_pair, species_1, species_2, type, connected) 
-sub.network %>% select(id_pair, normalized_degree_sp_1, normalized_degree_sp_2, subtype, network_id) 
-```
-
-
-
-Arxhina's Data
-========================================================
-
-```{r, echo=FALSE}
 aggregate.df <- network.df %>%
   group_by(id_pair, subtype, type, species_1, species_2) %>%
   summarise(co_occur = n(), 
@@ -86,150 +41,134 @@ aggregate.df <- network.df %>%
             mean_norm_deg_sp_1 = round(mean(normalized_degree_sp_1),2), 
             mean_norm_deg_sp_2 = round(mean(normalized_degree_sp_2),2)) %>%
   ungroup() %>%
-  mutate(prop_interactions = round(interactions/co_occur,2))
+  mutate(prop_interactions = round(interactions/co_occur,2),
+         sc.mean_norm_deg_sp_1 = (mean_norm_deg_sp_1 - mean(mean_norm_deg_sp_1))/sd(mean_norm_deg_sp_1),
+         sc.mean_norm_deg_sp_2 = (mean_norm_deg_sp_2 - mean(mean_norm_deg_sp_2))/sd(mean_norm_deg_sp_2))
 
 agg.sub <- aggregate.df %>% sample_n(size = 10)
+
 agg.sub %>% select(id_pair, prop_interactions, type)
-agg.sub %>% select(id_pair, mean_norm_deg_sp_1, mean_norm_deg_sp_2)
-
 ```
 
-
-Is Arxhina's Data Normally Distributed?
-=======================================
-
-```{r, echo = FALSE}
-hist(aggregate.df$prop_interactions, main = "Distribution of Interactions", xlab = "Proportion of Interactions")
-hist(aggregate.df$co_occur, main = "Distribution of Co-Occurences", xlab = "Co-Occurences")
-
-hist(asin(aggregate.df$prop_interactions), main = "Arc-Sine Transformation", xlab = "Proportion of Interactions")
-
-```
-
-Is it balanced?
-===============
-- Pseudo-Replication
-```{r, echo = FALSE}
-hist(table(aggregate.df$species_1), xlab = "Representation in Data", main = "Species 1")
-hist(table(aggregate.df$species_2), xlab = "Representation in Data", main = "Species 2")
-```
-
-Other Problems
-===============
-- Pseudo-Replication at the network level
-```{r, echo = FALSE}
-hist(table(network.df$network_id))
-```
-
-
-Other Problems
-===============
-- Pseudo-Replication
-```{r, echo = FALSE}
-table(aggregate.df$type, aggregate.df$subtype)
-```
-
-Exploring the Data
+Arxhina's Data
 ========================================================
 
-How do interaction type and normalized degree influence the probability of an interaction?
+- 4075 unique pairs of interactions
+```{r, echo = FALSE}
+agg.sub %>% select(subtype, Norm.Deg.Sp.1 = mean_norm_deg_sp_1, Norm.Deg.Sp.2 = mean_norm_deg_sp_2)
+```
+
+Possible Analysis
+=========================
+Analysis of Variance (ANOVA)
+- Data points are independent (true for **ANY** statistical analysis)
+- Residuals (error) are normally distributed
+- Equality of variances
+
+
+Explore the Data
+=======================
+- Is ANOVA okay?
 
 ```{r, echo = FALSE}
 library(cowplot)
 
 ggplot(aggregate.df, aes(x = mean_norm_deg_sp_1, y = prop_interactions, color = type)) + 
-  geom_point(aes(size = co_occur), show.legend = FALSE) + geom_smooth(method = "lm", show.legend = FALSE) + 
+  geom_point(aes(size = co_occur), shape = 1) + geom_smooth(method = "lm") + 
   scale_y_continuous(name = "Probability of Interacting", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0)) +
   scale_x_continuous(name = "Avg. Normalized Degree of Sp. 1", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0))
-
-ggplot(aggregate.df, aes(x = mean_norm_deg_sp_2, y = prop_interactions, color = type)) + 
-  geom_point() + geom_smooth(method = "lm") +
-  scale_y_continuous(name = "", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0)) +
-  scale_x_continuous(name = "Avg. Normalized Degree of Sp. 2", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0))
 ```
 
-GLMs
-=====
 
+Are unique pairwise interactions independent of each other?
+===========================================================
+- Many species occur in multiple interactions
+
+```{r, echo = FALSE}
+hist(table(aggregate.df$species_1), xlab = "Representation in Data", main = "Species 1")
+```
+
+
+Are unique pairwise interactions independent of each other?
+===========================================================
+- Bias toward Host-Parasite and Plant-Pollinator interactions
+
+```{r, echo = FALSE}
+plot(table(aggregate.df$subtype), ylab = "No. of Unique Interactions")
+```
+
+GLMMs to the Rescue 
+===================
+
+**Generalized Linear Models**
+- Non-normal data okay (pick another error distribution)
 ```{r, echo = FALSE}
 binomial_smooth <- function(...) {
   geom_smooth(method = "glm", method.args = list(family = "binomial"), ...)
 }
 
 ggplot(aggregate.df, aes(x = mean_norm_deg_sp_1, y = prop_interactions, color = type)) + 
-  geom_point(aes(size = co_occur), shape = 1, show.legend = FALSE) + binomial_smooth(aes(weight = co_occur), show.legend = FALSE) + 
+  geom_point(aes(size = co_occur), shape = 1) + binomial_smooth(aes(weight = co_occur)) + 
   scale_y_continuous(name = "Probability of Interacting", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0)) +
-  scale_x_continuous(name = "Avg. Normalized Degree of Sp. 1", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0))
+  scale_x_continuous(name = "Avg. Normalized Degree of Sp. 1", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0)) +
+  ggtitle("Binomial Distribution")
 ```
 
 
-Analysis with a linear model
-========================================================
+GLMMs to the Rescue 
+===================
 
+**Mixed-Effect Models**
+- Account for non-independence in the data
+- **Fixed-effects**: factors whose effects are experimentally determined, or whose interest lies in the specific effects of each level.
+- **Random Effects**: factors whose levels are sampled from a larger population, or whose interest lies in the variation among them rather than the specific effects of each level.
+- Status of particular levels depends on experimental design and context.
+- No need to aggregate data
+
+
+Mixed-Model Example
+==================
+- Fixed-effect: Type of Ecological Interaction
+- Random-effect: Subtype
 ```{r, echo = FALSE}
-library(broom)
-agg.glm <- lm(prop_interactions ~ type*mean_norm_deg_sp_1*mean_norm_deg_sp_2,
-              data = aggregate.df)
-agg.tidy <- tidy(agg.glm, conf.int = TRUE, conf.level = 0.95)
+binomial_smooth <- function(...) {
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), ...)
+}
 
-agg.tidy %>% transmute(Factor = term, Estimate = round(estimate,2), CI.025 = round(conf.low,2), CI.975 = round(conf.high, 2), P_value = round(p.value, 3))
+ggplot(aggregate.df, aes(x = mean_norm_deg_sp_1, y = prop_interactions, color = subtype)) + 
+  geom_point(aes(size = co_occur), shape = 1) + binomial_smooth(aes(weight = co_occur)) + 
+  scale_y_continuous(name = "Probability of Interacting", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0)) +
+  scale_x_continuous(name = "Avg. Normalized Degree of Sp. 1", breaks = c(0,0.25,0.5,0.75,1.0), labels = c(0,0.25,0.5,0.75,1.0)) 
 ```
 
 
-Visualize the 3-way Interaction
-===============================
-```{r, echo = FALSE}
-library(visreg)
-
-visreg2d(agg.glm, "mean_norm_deg_sp_1", "mean_norm_deg_sp_2", cond = list(type = "A"), scale = "response")
-
-visreg2d(agg.glm, "mean_norm_deg_sp_1", "mean_norm_deg_sp_2", cond = list(type = "M"), scale = "response")
-```
-
-
-Analysis Assumptions Met?
+Another Example 
 =========================
-```{r, echo = FALSE}
-resid.df <- cbind.data.frame(residuals = residuals(agg.glm),
-                             type = aggregate.df$type,
-                             mean_norm_deg_sp_1 = aggregate.df$mean_norm_deg_sp_1,
-                             mean_norm_deg_sp_2 = aggregate.df$mean_norm_deg_sp_2)
-
-hist(resid.df$residuals)
-
-ggplot(resid.df, aes(x = type, y = residuals)) + geom_boxplot()
-
-ggplot(resid.df, aes(x = mean_norm_deg_sp_1, y = residuals, color = type)) + geom_point() + geom_smooth(method = "lm")
-ggplot(resid.df, aes(x = mean_norm_deg_sp_2, y = residuals, color = type)) + geom_point() + geom_smooth(method = "lm")
-
-```
-
-
-Variability in Normalized Degree
-========================================================
-
-- Is using the mean informative?
+- Is using the mean for normalized degree informative?
 
 ```{r, echo = FALSE}
 sub.sp1 <- network.df %>% select(species_1, network_id, normalized_degree_sp_1) %>% unique 
-
 get.order <- sub.sp1 %>% group_by(species_1) %>% summarise(mean_norm_deg_sp_1 = mean(normalized_degree_sp_1)) %>% arrange(mean_norm_deg_sp_1)
-
 sub.sp1$species_1 <- factor(sub.sp1$species_1, levels = get.order$species_1)
 
 ggplot(sub.sp1, aes(x = species_1, y = normalized_degree_sp_1)) + geom_boxplot() + coord_flip()
 
 ```
 
-
 Generalized Linear Mixed-Effect Model
 =====================================
 
-```{r} 
-library(brms)
-```
+**Probability of Interaction** ~ 
 
-```{r}
+  **Type** x **Norm_Deg_Sp_1** x **Norm_Deg_Sp_2** +
+  
+  (1 | **Subtype**) + (1 | **Sp_1 ID**) + (1 | **Sp_2 ID**) + 
+  
+  (1 | **Network ID**) + (1 | **Interaxn ID**)
+  
+- Model complexity requires a Bayesian approach
+```{r, echo = FALSE} 
+library(brms)
 interaction.formula <- brmsformula(connected ~                                # probability of species interaction
                                      type*sc.norm_deg_sp_1*sc.norm_deg_sp_2 +   # 3-way interaction between type and normalized degree of each species
                                      (1 | network_id) +                       # allow probability of interaction to vary among networks
@@ -239,45 +178,34 @@ interaction.formula <- brmsformula(connected ~                                # 
                                      (1 | id_pair))                           # allow probability of interaction to vary among unique species interactions
 ```
 
-- >3 Random Effects requires Bayesian approach
-
-
-Bayesian vs. Frequentist Approach
-=================================
-- Bayesians want to know: Given the data are true, what is the probability of this model?
-- Frequentists want to know: Given the model is true, what is the probability of the data?
-
 
 How does a Bayesian approach help us fit a more complex model?
 =============================================================
 - Incorporate prior information
-
-```{r}
-get_prior(interaction.formula, data = network.df, family = bernoulli(link = "logit")) 
-```
-
 - But how do we choose a "good" prior?
+
 
 Choosing Priors
 ================
-- Have to think like the model
+*Have to think like the model*
 
-*For every 1 unit change in the predictor(s), how does this affect the log(odds) of an interaction?*
+- How does a 1 unit change in the predictor affect the log(odds) of an interaction? 
 
-- How does mutualism affect the odds of an interaction relative to antagonism?
-- How does 
+**Example**:
+- Do mutualistic interactions *increase* or *decrease* the probability of an interaction?
+- How big are these potential effects?
+
 
 Example
 =============
+- pM = 0.75; pA = 0.25
+- Model Coefficient = log(pM / (1-pM)) - log(pA / (1-pA))
 
-```{r}
-
+```{r, echo = FALSE}
+library(cowplot)
 pM <- 0.75 # probability of a mutualistic interaction when two species co-occur 
 pA <- 0.25 # probability of an antagonistic interaction when two species co-occur 
 mu_mutualist <- log(pM / (1-pM)) - log(pA / (1-pA)) # logistic regression coefficient
-```
-
-```{r, echo = FALSE}
 samp <- 1000
 sd_type <- data.frame(density = c(rnorm(samp, 0, 0.5),
                                   rnorm(samp, 0, 1),
@@ -294,23 +222,9 @@ ggplot(sd_type, aes(x = density, fill = standard_deviation)) +
 
 Run the Model
 ==============
-
-```{r}
-summary <- read_csv("model_output/interaction_summary_fixef.csv") %>% as.data.frame()
-
-data.frame(coefficients = summary$coefficients,
-           odds = round(exp(summary[ ,2]),1))
-```
+- Summary Plots
 
 
-Visualize the Model Results
-===========================
-
-- No effect of mutualism vs. antagonism
-![alt text](plots/type_main.pdf)
 
 
-Visualize the Model Results
-===========================
-- Interaction between normalized degree
 
