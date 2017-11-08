@@ -107,7 +107,7 @@ interaction.formula <- brmsformula(connected ~                                # 
                                      (1 | species_1) +                        # allow probability of interaction to vary among resource species
                                      (1 | species_2) +                        # allow probability of interaction to vary among consumer species
                                      (1 | id_pair))                           # allow probability of interaction to vary among unique species interactions
-
+  
 
 ## RATIONALE FOR MODEL PRIORS ----
 
@@ -209,16 +209,43 @@ interaction.test <- brm(interaction.formula,
                         prior = interaction.priors,
                         algorithm = "sampling",
                         chains = 4,
-                        control = list(adapt_delta = 0.95),
+                        control = list(adapt_delta = 0.99, max_treedepth = 20),
                         save_model = "model_output/interaction_test")
+
 
 # plot(interaction.test) # everything looks good
 summary(interaction.test)
 
+# Calculates the predicted variance divided by predicted variance plus error variance. 
+# This Bayesian R2 can be interpreted as a data-based estimate of the proportion of variance explained for new data.
+bayes_R2(interaction.test) # 40.1% of the variance, 95% CI = 38.8% - 41.4%
+
+# see how dropping the 3-way interaction affects the model fit
+drop.interaction.priors <- c(set_prior("normal(0,2)", class = "b", coef = "typeM"),
+                             set_prior("normal(1,2)", class = "b", coef = "sc.norm_deg_sp_1"),
+                             set_prior("normal(1,2)", class = "b", coef = "sc.norm_deg_sp_2"),
+                             set_prior("normal(0,2)", class = "b", coef = "sc.norm_deg_sp_1:sc.norm_deg_sp_2"),
+                             set_prior("normal(0,2)", class = "b", coef = "typeM:sc.norm_deg_sp_1"),
+                             set_prior("normal(0,2)", class = "b", coef = "typeM:sc.norm_deg_sp_2"),
+                             #set_prior("normal(0,2)", class = "b", coef = "typeM:sc.norm_deg_sp_1:sc.norm_deg_sp_2"),
+                             set_prior("normal(0,2)", class = "sd"))
+
+drop.interaction <- brm(connected ~ (type+sc.norm_deg_sp_1+sc.norm_deg_sp_2)^2 + 
+                          (1 | network_id) + (1 | subtype) + (1 | species_1) + (1 | species_2) + (1 | id_pair),
+                        data = network.df, family = bernoulli(), prior = drop.interaction.priors,
+                        algorithm = "sampling", chains = 4, control = list(adapt_delta = 0.99, max_treedepth = 20))
+bayes_R2(drop.interaction) 
+LOO(drop.interaction, interaction.test, reloo = TRUE) 
+
+#LOOIC     SE
+#drop.interaction                    11647.36 118.61
+#interaction.test                    11622.12 116.99
+#drop.interaction - interaction.test    25.24  22.31
+
 ## SAVE MODEL SUMMARY INFORMATION ----
 
 # fixed effects
-interaction_fixef <- round(as.data.frame(summary(interaction.test)[[17]]),2)
+interaction_fixef <- round(as.data.frame(summary(interaction.test)[[18]]),2)
 interaction_fixef$coefficients <- rownames(interaction_fixef)
 write_csv(select(interaction_fixef, coefficients, Estimate:Rhat), "model_output/interaction_summary_fixef.csv")
 
@@ -274,10 +301,20 @@ type.norm_sp1 <- plot(marginal_effects(interaction.test, effects = "type:sc.norm
   ggplot2::ylab("Probability of Interaction")
 ggsave("plots/type.norm_sp1.pdf")
 
+type.norm_sp1_cont <- plot(marginal_effects(interaction.test, effects = "sc.norm_deg_sp_1:type"))[[1]] +
+  ggplot2::xlab("Normalized Degree Sp. 1 (scaled)") +
+  ggplot2::ylab("Probability of Interaction")
+ggsave("plots/type.norm_sp1_cont.pdf")
+
 type.norm_sp2 <- plot(marginal_effects(interaction.test, effects = "type:sc.norm_deg_sp_2"))[[1]] +
   ggplot2::xlab("Interaction Type") +
   ggplot2::ylab("Probability of Interaction")
 ggsave("plots/type.norm_sp2.pdf")
+
+type.norm_sp2_cont <- plot(marginal_effects(interaction.test, effects = "sc.norm_deg_sp_2:type"))[[1]] +
+  ggplot2::xlab("Normalized Degree Sp. 2 (scaled)") +
+  ggplot2::ylab("Probability of Interaction")
+ggsave("plots/type.norm_sp2_cont.pdf")
 
 norm_sp1.norm_sp2 <- plot(marginal_effects(interaction.test, effects = "sc.norm_deg_sp_1:sc.norm_deg_sp_2", surface = TRUE), stype = "raster")[[1]] +
   ggplot2::xlab("Resource Normalized Degree (scaled)") +
@@ -294,7 +331,9 @@ write_csv(heatmap.data[[1]], "model_output/heatmap_data.csv") # export so I can 
 
 source("plot_heatmaps.R") # source code and plot 3-way interactions.
 
-## EXAMINE ROBUSTNESS OF MODEL WITHOUT PRIORS ----
+## EXAMINE ROBUSTNESS OF MODEL WITH DEFAULT PRIORS ----
+
+get_prior(interaction.formula, data = network.df) # default priors
 
 # take a really long time to run
 interaction.test.nopriors <- brm(interaction.formula,
