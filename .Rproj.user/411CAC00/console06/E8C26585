@@ -417,3 +417,23 @@ Untracked files:
 
 nothing added to commit but untracked files present (use "git add" to track)
 ]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ 
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	[32mmodified:   .Rproj.user/411CAC00/console06/INDEX001[m
+	[32mmodified:   .Rproj.user/411CAC00/sources/prop/INDEX[m
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
+
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status[K[K[K[K[K[Kcheckout .R pojwarning: ignoring ref with broken name refs/heads/master (Matthew Barbour's conflicted copy 2019-06-04)
+warning: ignoring ref with broken name refs/heads/master (Matthew Barbour's conflicted copy 2019-06-04)
+[K[K[A]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ [K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
