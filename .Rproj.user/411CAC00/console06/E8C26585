@@ -1,0 +1,55 @@
+]0;/home/matt/Dropbox/Arxhina_stats]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ [K]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ cd ..
+]0;/home/matt/Dropbox]0;matt@HP-Z640-02: ~/Dropbox[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox[00m$ git mv Arxhina_stats/[K partner_fidelity
+fatal: Not a git repository (or any of the parent directories): .git
+]0;/home/matt/Dropbox]0;matt@HP-Z640-02: ~/Dropbox[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox[00m$ git mv Arxhina_stats partner_fidelity[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcd Ar[K[K/Ar[K[K[K.[KArxhina_stats/
+]0;/home/matt/Dropbox/Arxhina_stats]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ git mv Arxhina_stats.Rproj [K[K[K[K[K[K[K[K[K[Kats partner_fideli ty
+fatal: bad source, source=Arxhina_stats, destination=partner_fidelity
+git remote add origin https://gi thub.com/mabarbour/partner_fidelity.git
+fatal: remote origin already exists.
+djk[K[K[Kcurl -s https://packagecloud.io/ install/repositories/github/git-lfs/script.deb.sh | sudo bash
+[sudo] password for matt: 
+Detected operating system as Ubuntu/xenial.
+Checking for curl...
+Detected curl...
+Checking for gpg...
+Detected gpg...
+Running apt-get update... done.
+Installing apt-transport-https... done.
+Installing /etc/apt/sources.list.d/github_git-lfs.list...done.
+Importing packagecloud gpg key... done.
+Running apt-get update... done.
+
+The repository is setup! You can now install packages.
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
+git: 'lfs' is not a git command. See 'git --help'.
+
+Did you mean this?
+	log
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ lf[K[Kgit lfs install
+git: 'lfs' is not a git command. See 'git --help'.
+
+Did you mean this?
+	log
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ fit [K[K[K[Kgit status
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+nothing to commit, working directory clean
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
+git: 'lfs' is not a git command. See 'git --help'.
+
+Did you mean this?
+	log
+git lsf[K[Kfs install
+git: 'lfs' is not a git command. See 'git --help'.
+
+Did you mean this?
+	log
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ [K]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
+git: 'lfs' is not a git command. See 'git --help'.
+
+Did you mean this?
+	log
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git ress[Ket --hard ori gin/master
+HEAD is now at 9f4e134 update output for Arxhina's analysis
+]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ 

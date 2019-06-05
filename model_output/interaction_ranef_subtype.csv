@@ -1,5 +1,0 @@
-Estimate.Intercept,Est.Error.Intercept,2.5%ile.Intercept,97.5%ile.Intercept,subtype
--0.92,1.21,-3.44,1.44,HostParasite
-0.36,1.22,-2.12,2.77,PlantHerbivore
-1.54,1.18,-0.75,4.08,PlantPollinator
--1,1.19,-3.41,1.55,PlantSeedDisperser
