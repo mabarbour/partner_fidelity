@@ -1,439 +1,0 @@
-]0;/home/matt/Dropbox/Arxhina_stats]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ [K]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ cd ..
-]0;/home/matt/Dropbox]0;matt@HP-Z640-02: ~/Dropbox[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox[00m$ git mv Arxhina_stats/[K partner_fidelity
-fatal: Not a git repository (or any of the parent directories): .git
-]0;/home/matt/Dropbox]0;matt@HP-Z640-02: ~/Dropbox[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox[00m$ git mv Arxhina_stats partner_fidelity[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcd Ar[K[K/Ar[K[K[K.[KArxhina_stats/
-]0;/home/matt/Dropbox/Arxhina_stats]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ git mv Arxhina_stats.Rproj [K[K[K[K[K[K[K[K[K[Kats partner_fideli ty
-fatal: bad source, source=Arxhina_stats, destination=partner_fidelity
-git remote add origin https://gi thub.com/mabarbour/partner_fidelity.git
-fatal: remote origin already exists.
-djk[K[K[Kcurl -s https://packagecloud.io/ install/repositories/github/git-lfs/script.deb.sh | sudo bash
-[sudo] password for matt: 
-Detected operating system as Ubuntu/xenial.
-Checking for curl...
-Detected curl...
-Checking for gpg...
-Detected gpg...
-Running apt-get update... done.
-Installing apt-transport-https... done.
-Installing /etc/apt/sources.list.d/github_git-lfs.list...done.
-Importing packagecloud gpg key... done.
-Running apt-get update... done.
-
-The repository is setup! You can now install packages.
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ lf[K[Kgit lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ fit [K[K[K[Kgit status
-On branch master
-Your branch is ahead of 'origin/master' by 2 commits.
-  (use "git push" to publish your local commits)
-nothing to commit, working directory clean
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-git lsf[K[Kfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ [K]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git ress[Ket --hard ori gin/master
-HEAD is now at 9f4e134 update output for Arxhina's analysis
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ [K]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/INDEX001[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31mreproduce_analyses_cache/latex/run model on full dataset_e66b0d45f7b97b7f1262e4b2bcd74c54.rdb[m
-	[31mreproduce_analyses_cache/latex/run no intercept model on full dataset_bf289c59d643dec0c0d8aad62b24d327.rdb[m
-	[31mreproduce_analyses_cache/latex/run no priors model on full dataset_d7ef80975ca69fe3cfe4f8f07997762f.rdb[m
-	[31mreproduce_analyses_cache/latex/run sampling effects model_b64d547c4585e787ec3d1c0b980e5ccf.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model v2_fa72f0479bc219701be953e0711e2ef0.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model_267d350f7a7cd9fbeb69d6680e305889.rdb[m
-	[31mreproduce_analyses_cache/latex/run weighted model_a8a2be4b259259fe3e85557effab62de.rdb[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install [A
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs track
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ cd[K [Kd ..
-]0;/home/matt/Dropbox]0;matt@HP-Z640-02: ~/Dropbox[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox[00m$ cd ..
-]0;/home/matt]0;matt@HP-Z640-02: ~[01;32mmatt@HP-Z640-02[00m:[01;34m~[00m$ git lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt]0;matt@HP-Z640-02: ~[01;32mmatt@HP-Z640-02[00m:[01;34m~[00m$ sudo apt-get install git-lfs
-[sudo] password for matt: 
-Reading package lists... 0%Reading package lists... 0%Reading package lists... 3%Reading package lists... Done
-Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
-Reading state information... 0%Reading state information... 0%Reading state information... Done
-The following packages were automatically installed and are no longer required:
-  libgeos-3.5.0 libstd-rust-1.30 snapd-login-service
-Use 'sudo apt autoremove' to remove them.
-The following NEW packages will be installed:
-  git-lfs
-0 upgraded, 1 newly installed, 0 to remove and 7 not upgraded.
-Need to get 5,730 kB of archives.
-After this operation, 13.9 MB of additional disk space will be used.
-0% [Working]0% [Working]0% [Working]            Get:1 https://packagecloud.io/github/git-lfs/ubuntu xenial/main amd64 git-lfs amd64 2.7.2 [5,730 kB]
-0% [1 git-lfs 15.6 kB/5,730 kB 0%]                                  100% [Working]              Fetched 5,730 kB in 1s (4,104 kB/s)
-Selecting previously unselected package git-lfs.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 431256 files and directories currently installed.)
-Preparing to unpack .../git-lfs_2.7.2_amd64.deb ...
-Unpacking git-lfs (2.7.2) ...
-Processing triggers for man-db (2.7.5-1) ...
-Setting up git-lfs (2.7.2) ...
-Git LFS initialized.
-]0;/home/matt]0;matt@HP-Z640-02: ~[01;32mmatt@HP-Z640-02[00m:[01;34m~[00m$ cd Down[K[K[K[KDropo[Kbox/partner_fidelity
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585.env[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/INDEX001[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31mreproduce_analyses_cache/latex/run model on full dataset_e66b0d45f7b97b7f1262e4b2bcd74c54.rdb[m
-	[31mreproduce_analyses_cache/latex/run no intercept model on full dataset_bf289c59d643dec0c0d8aad62b24d327.rdb[m
-	[31mreproduce_analyses_cache/latex/run no priors model on full dataset_d7ef80975ca69fe3cfe4f8f07997762f.rdb[m
-	[31mreproduce_analyses_cache/latex/run sampling effects model_b64d547c4585e787ec3d1c0b980e5ccf.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model v2_fa72f0479bc219701be953e0711e2ef0.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model_267d350f7a7cd9fbeb69d6680e305889.rdb[m
-	[31mreproduce_analyses_cache/latex/run weighted model_a8a2be4b259259fe3e85557effab62de.rdb[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install [A
-Updated git hooks.
-Git LFS initialized.
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs track " *[K*.rdb*[K"
-Tracking "*.rdb"
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git add .gitad[Ktt ributes
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-Changes to be committed:
-  (use "git reset HEAD <file>..." to unstage)
-
-	[32mnew file:   .gitattributes[m
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585.env[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/INDEX001[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31mreproduce_analyses_cache/latex/run model on full dataset_e66b0d45f7b97b7f1262e4b2bcd74c54.rdb[m
-	[31mreproduce_analyses_cache/latex/run no intercept model on full dataset_bf289c59d643dec0c0d8aad62b24d327.rdb[m
-	[31mreproduce_analyses_cache/latex/run no priors model on full dataset_d7ef80975ca69fe3cfe4f8f07997762f.rdb[m
-	[31mreproduce_analyses_cache/latex/run sampling effects model_b64d547c4585e787ec3d1c0b980e5ccf.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model v2_fa72f0479bc219701be953e0711e2ef0.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model_267d350f7a7cd9fbeb69d6680e305889.rdb[m
-	[31mreproduce_analyses_cache/latex/run weighted model_a8a2be4b259259fe3e85557effab62de.rdb[m
-
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is up-to-date with 'origin/master'.
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git rm -r --cah [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cc hed .Rproj/[K.user
-rm '.Rproj.user/411CAC00/console06/E8C26585'
-rm '.Rproj.user/411CAC00/console06/E8C26585.env'
-rm '.Rproj.user/411CAC00/console06/INDEX001'
-rm '.Rproj.user/411CAC00/pcs/debug-breakpoints.pper'
-rm '.Rproj.user/411CAC00/pcs/files-pane.pper'
-rm '.Rproj.user/411CAC00/pcs/packages-pane.pper'
-rm '.Rproj.user/411CAC00/pcs/source-pane.pper'
-rm '.Rproj.user/411CAC00/pcs/source-window.pper'
-rm '.Rproj.user/411CAC00/pcs/windowlayoutstate.pper'
-rm '.Rproj.user/411CAC00/pcs/workbench-pane.pper'
-rm '.Rproj.user/411CAC00/persistent-state'
-rm '.Rproj.user/411CAC00/persistent-state (Matthew Barbour's conflicted copy 2019-06-04)'
-rm '.Rproj.user/411CAC00/saved_source_markers'
-rm '.Rproj.user/411CAC00/sources/prop/16E3B84'
-rm '.Rproj.user/411CAC00/sources/prop/2240A05C'
-rm '.Rproj.user/411CAC00/sources/prop/306E6E2A'
-rm '.Rproj.user/411CAC00/sources/prop/326937DD'
-rm '.Rproj.user/411CAC00/sources/prop/3FFA64DF'
-rm '.Rproj.user/411CAC00/sources/prop/3FFA64DF (Matthew Barbour's conflicted copy 2019-06-04)'
-rm '.Rproj.user/411CAC00/sources/prop/546C7819'
-rm '.Rproj.user/411CAC00/sources/prop/6A7D3C26'
-rm '.Rproj.user/411CAC00/sources/prop/6D7D0CAE'
-rm '.Rproj.user/411CAC00/sources/prop/8493A66'
-rm '.Rproj.user/411CAC00/sources/prop/92EBD7C3'
-rm '.Rproj.user/411CAC00/sources/prop/96324E0'
-rm '.Rproj.user/411CAC00/sources/prop/96324E0 (Matthew Barbour's conflicted copy 2019-06-04)'
-rm '.Rproj.user/411CAC00/sources/prop/A9690120'
-rm '.Rproj.user/411CAC00/sources/prop/C0ADF15F'
-rm '.Rproj.user/411CAC00/sources/prop/DD8ED053'
-rm '.Rproj.user/411CAC00/sources/prop/DE1A3236'
-rm '.Rproj.user/411CAC00/sources/prop/DF1B1852'
-rm '.Rproj.user/411CAC00/sources/prop/E2AA674F'
-rm '.Rproj.user/411CAC00/sources/prop/EDE7A75C'
-rm '.Rproj.user/411CAC00/sources/prop/F524A2EB'
-rm '.Rproj.user/411CAC00/sources/prop/F96B5B6C'
-rm '.Rproj.user/411CAC00/sources/prop/INDEX'
-rm '.Rproj.user/411CAC00/sources/prop/INDEX (Matthew Barbour's conflicted copy 2019-06-04)'
-rm '.Rproj.user/411CAC00/sources/s-b63d746e/924A8AFF-contents'
-rm '.Rproj.user/411CAC00/sources/s-b63d746e/C1A8112E-contents'
-rm '.Rproj.user/411CAC00/sources/s-b63d746e/lock_file'
-rm '.Rproj.user/CC327E04/build_options'
-rm '.Rproj.user/CC327E04/pcs/files-pane.pper'
-rm '.Rproj.user/CC327E04/pcs/packages-pane.pper'
-rm '.Rproj.user/CC327E04/pcs/source-pane.pper'
-rm '.Rproj.user/CC327E04/pcs/source-window.pper'
-rm '.Rproj.user/CC327E04/pcs/windowlayoutstate.pper'
-rm '.Rproj.user/CC327E04/pcs/workbench-pane.pper'
-rm '.Rproj.user/CC327E04/persistent-state'
-rm '.Rproj.user/CC327E04/presentation/presentation-state-v2'
-rm '.Rproj.user/CC327E04/rmd-outputs'
-rm '.Rproj.user/CC327E04/saved_source_markers'
-rm '.Rproj.user/CC327E04/sdb/per/t/251C34FA'
-rm '.Rproj.user/CC327E04/sdb/prop/25738FFD'
-rm '.Rproj.user/CC327E04/sdb/prop/3BA874A5'
-rm '.Rproj.user/CC327E04/sdb/prop/4478BB33'
-rm '.Rproj.user/CC327E04/sdb/prop/8FDB4D5B'
-rm '.Rproj.user/CC327E04/sdb/prop/91EF036B'
-rm '.Rproj.user/CC327E04/sdb/prop/A0F58FC8'
-rm '.Rproj.user/CC327E04/sdb/prop/B0F34E20'
-rm '.Rproj.user/CC327E04/sdb/prop/B8467686'
-rm '.Rproj.user/CC327E04/sdb/prop/INDEX'
-rm '.Rproj.user/CC327E04/session-persistent-state'
-rm '.Rproj.user/CC327E04/vcs_options'
-rm '.Rproj.user/shared/notebooks/15A97009-reproduce_analyses/1/411CAC004237b4f4/chunks.json'
-rm '.Rproj.user/shared/notebooks/15A97009-reproduce_analyses/1/s/chunks.json'
-rm '.Rproj.user/shared/notebooks/patch-chunk-names'
-rm '.Rproj.user/shared/notebooks/paths'
-rm '.Rproj.user/shared/notebooks/paths (Matthew Barbour's conflicted copy 2019-06-04)'
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is up-to-date with 'origin/master'.
-Changes to be committed:
-  (use "git reset HEAD <file>..." to unstage)
-
-	[32mdeleted:    .Rproj.user/411CAC00/console06/E8C26585[m
-	[32mdeleted:    .Rproj.user/411CAC00/console06/E8C26585.env[m
-	[32mdeleted:    .Rproj.user/411CAC00/console06/INDEX001[m
-	[32mdeleted:    .Rproj.user/411CAC00/pcs/debug-breakpoints.pper[m
-	[32mdeleted:    .Rproj.user/411CAC00/pcs/files-pane.pper[m
-	[32mdeleted:    .Rproj.user/411CAC00/pcs/packages-pane.pper[m
-	[32mdeleted:    .Rproj.user/411CAC00/pcs/source-pane.pper[m
-	[32mdeleted:    .Rproj.user/411CAC00/pcs/source-window.pper[m
-	[32mdeleted:    .Rproj.user/411CAC00/pcs/windowlayoutstate.pper[m
-	[32mdeleted:    .Rproj.user/411CAC00/pcs/workbench-pane.pper[m
-	[32mdeleted:    .Rproj.user/411CAC00/persistent-state[m
-	[32mdeleted:    .Rproj.user/411CAC00/persistent-state (Matthew Barbour's conflicted copy 2019-06-04)[m
-	[32mdeleted:    .Rproj.user/411CAC00/saved_source_markers[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/16E3B84[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/2240A05C[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/306E6E2A[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/326937DD[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/3FFA64DF[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/3FFA64DF (Matthew Barbour's conflicted copy 2019-06-04)[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/546C7819[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/6A7D3C26[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/6D7D0CAE[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/8493A66[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/92EBD7C3[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/96324E0[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/96324E0 (Matthew Barbour's conflicted copy 2019-06-04)[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/A9690120[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/C0ADF15F[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/DD8ED053[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/DE1A3236[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/DF1B1852[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/E2AA674F[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/EDE7A75C[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/F524A2EB[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/F96B5B6C[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/INDEX[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/prop/INDEX (Matthew Barbour's conflicted copy 2019-06-04)[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/s-b63d746e/924A8AFF-contents[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/s-b63d746e/C1A8112E-contents[m
-	[32mdeleted:    .Rproj.user/411CAC00/sources/s-b63d746e/lock_file[m
-	[32mdeleted:    .Rproj.user/CC327E04/build_options[m
-	[32mdeleted:    .Rproj.user/CC327E04/pcs/files-pane.pper[m
-	[32mdeleted:    .Rproj.user/CC327E04/pcs/packages-pane.pper[m
-	[32mdeleted:    .Rproj.user/CC327E04/pcs/source-pane.pper[m
-	[32mdeleted:    .Rproj.user/CC327E04/pcs/source-window.pper[m
-	[32mdeleted:    .Rproj.user/CC327E04/pcs/windowlayoutstate.pper[m
-	[32mdeleted:    .Rproj.user/CC327E04/pcs/workbench-pane.pper[m
-	[32mdeleted:    .Rproj.user/CC327E04/persistent-state[m
-	[32mdeleted:    .Rproj.user/CC327E04/presentation/presentation-state-v2[m
-	[32mdeleted:    .Rproj.user/CC327E04/rmd-outputs[m
-	[32mdeleted:    .Rproj.user/CC327E04/saved_source_markers[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/per/t/251C34FA[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/25738FFD[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/3BA874A5[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/4478BB33[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/8FDB4D5B[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/91EF036B[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/A0F58FC8[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/B0F34E20[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/B8467686[m
-	[32mdeleted:    .Rproj.user/CC327E04/sdb/prop/INDEX[m
-	[32mdeleted:    .Rproj.user/CC327E04/session-persistent-state[m
-	[32mdeleted:    .Rproj.user/CC327E04/vcs_options[m
-	[32mdeleted:    .Rproj.user/shared/notebooks/15A97009-reproduce_analyses/1/411CAC004237b4f4/chunks.json[m
-	[32mdeleted:    .Rproj.user/shared/notebooks/15A97009-reproduce_analyses/1/s/chunks.json[m
-	[32mdeleted:    .Rproj.user/shared/notebooks/patch-chunk-names[m
-	[32mdeleted:    .Rproj.user/shared/notebooks/paths[m
-	[32mdeleted:    .Rproj.user/shared/notebooks/paths (Matthew Barbour's conflicted copy 2019-06-04)[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31m.Rproj.user/[m
-
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git commit .Rprooj.user/[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[Kcommit -m | [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C" remove files in .Rproj.user"
-[master 4758f00] remove files in .Rproj.user
- 68 files changed, 1631 deletions(-)
- delete mode 100644 .Rproj.user/411CAC00/console06/E8C26585
- delete mode 100644 .Rproj.user/411CAC00/console06/E8C26585.env
- delete mode 100644 .Rproj.user/411CAC00/console06/INDEX001
- delete mode 100644 .Rproj.user/411CAC00/pcs/debug-breakpoints.pper
- delete mode 100644 .Rproj.user/411CAC00/pcs/files-pane.pper
- delete mode 100644 .Rproj.user/411CAC00/pcs/packages-pane.pper
- delete mode 100644 .Rproj.user/411CAC00/pcs/source-pane.pper
- delete mode 100644 .Rproj.user/411CAC00/pcs/source-window.pper
- delete mode 100644 .Rproj.user/411CAC00/pcs/windowlayoutstate.pper
- delete mode 100644 .Rproj.user/411CAC00/pcs/workbench-pane.pper
- delete mode 100644 .Rproj.user/411CAC00/persistent-state
- delete mode 100644 .Rproj.user/411CAC00/persistent-state (Matthew Barbour's conflicted copy 2019-06-04)
- delete mode 100644 .Rproj.user/411CAC00/saved_source_markers
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/16E3B84
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/2240A05C
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/306E6E2A
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/326937DD
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/3FFA64DF
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/3FFA64DF (Matthew Barbour's conflicted copy 2019-06-04)
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/546C7819
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/6A7D3C26
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/6D7D0CAE
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/8493A66
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/92EBD7C3
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/96324E0
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/96324E0 (Matthew Barbour's conflicted copy 2019-06-04)
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/A9690120
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/C0ADF15F
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/DD8ED053
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/DE1A3236
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/DF1B1852
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/E2AA674F
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/EDE7A75C
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/F524A2EB
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/F96B5B6C
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/INDEX
- delete mode 100644 .Rproj.user/411CAC00/sources/prop/INDEX (Matthew Barbour's conflicted copy 2019-06-04)
- delete mode 100644 .Rproj.user/411CAC00/sources/s-b63d746e/924A8AFF-contents
- delete mode 100644 .Rproj.user/411CAC00/sources/s-b63d746e/C1A8112E-contents
- delete mode 100644 .Rproj.user/411CAC00/sources/s-b63d746e/lock_file
- delete mode 100644 .Rproj.user/CC327E04/build_options
- delete mode 100644 .Rproj.user/CC327E04/pcs/files-pane.pper
- delete mode 100644 .Rproj.user/CC327E04/pcs/packages-pane.pper
- delete mode 100644 .Rproj.user/CC327E04/pcs/source-pane.pper
- delete mode 100644 .Rproj.user/CC327E04/pcs/source-window.pper
- delete mode 100644 .Rproj.user/CC327E04/pcs/windowlayoutstate.pper
- delete mode 100644 .Rproj.user/CC327E04/pcs/workbench-pane.pper
- delete mode 100644 .Rproj.user/CC327E04/persistent-state
- delete mode 100644 .Rproj.user/CC327E04/presentation/presentation-state-v2
- delete mode 100644 .Rproj.user/CC327E04/rmd-outputs
- delete mode 100644 .Rproj.user/CC327E04/saved_source_markers
- delete mode 100644 .Rproj.user/CC327E04/sdb/per/t/251C34FA
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/25738FFD
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/3BA874A5
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/4478BB33
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/8FDB4D5B
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/91EF036B
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/A0F58FC8
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/B0F34E20
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/B8467686
- delete mode 100644 .Rproj.user/CC327E04/sdb/prop/INDEX
- delete mode 100644 .Rproj.user/CC327E04/session-persistent-state
- delete mode 100644 .Rproj.user/CC327E04/vcs_options
- delete mode 100644 .Rproj.user/shared/notebooks/15A97009-reproduce_analyses/1/411CAC004237b4f4/chunks.json
- delete mode 100644 .Rproj.user/shared/notebooks/15A97009-reproduce_analyses/1/s/chunks.json
- delete mode 100644 .Rproj.user/shared/notebooks/patch-chunk-names
- delete mode 100644 .Rproj.user/shared/notebooks/paths
- delete mode 100644 .Rproj.user/shared/notebooks/paths (Matthew Barbour's conflicted copy 2019-06-04)
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31m.Rproj.user/[m
-
-nothing added to commit but untracked files present (use "git add" to track)
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ 
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 3 commits.
-  (use "git push" to publish your local commits)
-Changes to be committed:
-  (use "git reset HEAD <file>..." to unstage)
-
-	[32mmodified:   .Rproj.user/411CAC00/console06/INDEX001[m
-	[32mmodified:   .Rproj.user/411CAC00/sources/prop/INDEX[m
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
-
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status[K[K[K[K[K[Kcheckout .R pojwarning: ignoring ref with broken name refs/heads/master (Matthew Barbour's conflicted copy 2019-06-04)
-warning: ignoring ref with broken name refs/heads/master (Matthew Barbour's conflicted copy 2019-06-04)
-[K[K[A]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ [K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
