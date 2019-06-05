@@ -1,176 +1,0 @@
-]0;/home/matt/Dropbox/Arxhina_stats]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ [K]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ cd ..
-]0;/home/matt/Dropbox]0;matt@HP-Z640-02: ~/Dropbox[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox[00m$ git mv Arxhina_stats/[K partner_fidelity
-fatal: Not a git repository (or any of the parent directories): .git
-]0;/home/matt/Dropbox]0;matt@HP-Z640-02: ~/Dropbox[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox[00m$ git mv Arxhina_stats partner_fidelity[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcd Ar[K[K/Ar[K[K[K.[KArxhina_stats/
-]0;/home/matt/Dropbox/Arxhina_stats]0;matt@HP-Z640-02: ~/Dropbox/Arxhina_stats[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/Arxhina_stats[00m$ git mv Arxhina_stats.Rproj [K[K[K[K[K[K[K[K[K[Kats partner_fideli ty
-fatal: bad source, source=Arxhina_stats, destination=partner_fidelity
-git remote add origin https://gi thub.com/mabarbour/partner_fidelity.git
-fatal: remote origin already exists.
-djk[K[K[Kcurl -s https://packagecloud.io/ install/repositories/github/git-lfs/script.deb.sh | sudo bash
-[sudo] password for matt: 
-Detected operating system as Ubuntu/xenial.
-Checking for curl...
-Detected curl...
-Checking for gpg...
-Detected gpg...
-Running apt-get update... done.
-Installing apt-transport-https... done.
-Installing /etc/apt/sources.list.d/github_git-lfs.list...done.
-Importing packagecloud gpg key... done.
-Running apt-get update... done.
-
-The repository is setup! You can now install packages.
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ lf[K[Kgit lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ fit [K[K[K[Kgit status
-On branch master
-Your branch is ahead of 'origin/master' by 2 commits.
-  (use "git push" to publish your local commits)
-nothing to commit, working directory clean
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-git lsf[K[Kfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ [K]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git ress[Ket --hard ori gin/master
-HEAD is now at 9f4e134 update output for Arxhina's analysis
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ [K]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/INDEX001[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31mreproduce_analyses_cache/latex/run model on full dataset_e66b0d45f7b97b7f1262e4b2bcd74c54.rdb[m
-	[31mreproduce_analyses_cache/latex/run no intercept model on full dataset_bf289c59d643dec0c0d8aad62b24d327.rdb[m
-	[31mreproduce_analyses_cache/latex/run no priors model on full dataset_d7ef80975ca69fe3cfe4f8f07997762f.rdb[m
-	[31mreproduce_analyses_cache/latex/run sampling effects model_b64d547c4585e787ec3d1c0b980e5ccf.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model v2_fa72f0479bc219701be953e0711e2ef0.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model_267d350f7a7cd9fbeb69d6680e305889.rdb[m
-	[31mreproduce_analyses_cache/latex/run weighted model_a8a2be4b259259fe3e85557effab62de.rdb[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install [A
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs track
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ cd[K [Kd ..
-]0;/home/matt/Dropbox]0;matt@HP-Z640-02: ~/Dropbox[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox[00m$ cd ..
-]0;/home/matt]0;matt@HP-Z640-02: ~[01;32mmatt@HP-Z640-02[00m:[01;34m~[00m$ git lfs install
-git: 'lfs' is not a git command. See 'git --help'.
-
-Did you mean this?
-	log
-]0;/home/matt]0;matt@HP-Z640-02: ~[01;32mmatt@HP-Z640-02[00m:[01;34m~[00m$ sudo apt-get install git-lfs
-[sudo] password for matt: 
-Reading package lists... 0%Reading package lists... 0%Reading package lists... 3%Reading package lists... Done
-Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree       
-Reading state information... 0%Reading state information... 0%Reading state information... Done
-The following packages were automatically installed and are no longer required:
-  libgeos-3.5.0 libstd-rust-1.30 snapd-login-service
-Use 'sudo apt autoremove' to remove them.
-The following NEW packages will be installed:
-  git-lfs
-0 upgraded, 1 newly installed, 0 to remove and 7 not upgraded.
-Need to get 5,730 kB of archives.
-After this operation, 13.9 MB of additional disk space will be used.
-0% [Working]0% [Working]0% [Working]            Get:1 https://packagecloud.io/github/git-lfs/ubuntu xenial/main amd64 git-lfs amd64 2.7.2 [5,730 kB]
-0% [1 git-lfs 15.6 kB/5,730 kB 0%]                                  100% [Working]              Fetched 5,730 kB in 1s (4,104 kB/s)
-Selecting previously unselected package git-lfs.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 431256 files and directories currently installed.)
-Preparing to unpack .../git-lfs_2.7.2_amd64.deb ...
-Unpacking git-lfs (2.7.2) ...
-Processing triggers for man-db (2.7.5-1) ...
-Setting up git-lfs (2.7.2) ...
-Git LFS initialized.
-]0;/home/matt]0;matt@HP-Z640-02: ~[01;32mmatt@HP-Z640-02[00m:[01;34m~[00m$ cd Down[K[K[K[KDropo[Kbox/partner_fidelity
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585.env[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/INDEX001[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31mreproduce_analyses_cache/latex/run model on full dataset_e66b0d45f7b97b7f1262e4b2bcd74c54.rdb[m
-	[31mreproduce_analyses_cache/latex/run no intercept model on full dataset_bf289c59d643dec0c0d8aad62b24d327.rdb[m
-	[31mreproduce_analyses_cache/latex/run no priors model on full dataset_d7ef80975ca69fe3cfe4f8f07997762f.rdb[m
-	[31mreproduce_analyses_cache/latex/run sampling effects model_b64d547c4585e787ec3d1c0b980e5ccf.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model v2_fa72f0479bc219701be953e0711e2ef0.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model_267d350f7a7cd9fbeb69d6680e305889.rdb[m
-	[31mreproduce_analyses_cache/latex/run weighted model_a8a2be4b259259fe3e85557effab62de.rdb[m
-
-no changes added to commit (use "git add" and/or "git commit -a")
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs install [A
-Updated git hooks.
-Git LFS initialized.
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git lfs track " *[K*.rdb*[K"
-Tracking "*.rdb"
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git add .gitad[Ktt ributes
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
-  (use "git push" to publish your local commits)
-Changes to be committed:
-  (use "git reset HEAD <file>..." to unstage)
-
-	[32mnew file:   .gitattributes[m
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/E8C26585.env[m
-	[31mmodified:   .Rproj.user/411CAC00/console06/INDEX001[m
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	[31mreproduce_analyses_cache/latex/run model on full dataset_e66b0d45f7b97b7f1262e4b2bcd74c54.rdb[m
-	[31mreproduce_analyses_cache/latex/run no intercept model on full dataset_bf289c59d643dec0c0d8aad62b24d327.rdb[m
-	[31mreproduce_analyses_cache/latex/run no priors model on full dataset_d7ef80975ca69fe3cfe4f8f07997762f.rdb[m
-	[31mreproduce_analyses_cache/latex/run sampling effects model_b64d547c4585e787ec3d1c0b980e5ccf.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model v2_fa72f0479bc219701be953e0711e2ef0.rdb[m
-	[31mreproduce_analyses_cache/latex/run subset sampling model_267d350f7a7cd9fbeb69d6680e305889.rdb[m
-	[31mreproduce_analyses_cache/latex/run weighted model_a8a2be4b259259fe3e85557effab62de.rdb[m
-
-]0;/home/matt/Dropbox/partner_fidelity]0;matt@HP-Z640-02: ~/Dropbox/partner_fidelity[01;32mmatt@HP-Z640-02[00m:[01;34m~/Dropbox/partner_fidelity[00m$ 
