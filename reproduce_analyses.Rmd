@@ -70,6 +70,8 @@ options(mc.cores=parallel::detectCores ())
 
 \newpage
 
+All data and code to reproduce the analyses presented below are available on GitHub (https://github.com/mabarbour/partner_fidelity).
+
 ## Dataset
 
 Here's a summary of the full dataset we used in our analyses (table \ref{tab:full-dataset}).
@@ -614,8 +616,6 @@ full.brm <- brm(
   control = list(adapt_delta = 0.99, max_treedepth = 20))
 ```
 
-\ 
-
 ```{r full-table, echo=FALSE}
 tidy_full.brm <- tidy(full.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) 
 
@@ -626,6 +626,14 @@ tidy_full.brm %>%
             `97.5%` = round(upper, 2)) %>%
   knitr::kable(., caption = "Mean and 95\\% credible intervals of fixed effects from our full model.", booktabs = T, linesep = "") %>%
   kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+\ 
+
+Our model provided a good fit to our data, explaining 40% of the variance.
+
+```{r bayesian R2}
+bayes_R2(full.brm)
 ```
 
 \ 
@@ -652,29 +660,31 @@ Below, we give a biological interpretation of each term in this model (table \re
 
 - Mutualistic interactions (relative to antagonistic) decrease the effects of symmetry on the log odds of partner fidelity by `r round(tidy_full.brm$estimate[10], 2)`. Put another way, mutualistic interactions increase the effects of *asymmetry* on the log odds of partner fidelity by `r -1*round(tidy_full.brm$estimate[10], 2)`.
 
-```{r bayesian R2}
-bayes_R2(full.brm)
-```
 
-
-```{r explaining three-way interaction}
+```{r explaining three-way interaction, include=FALSE}
+# these values are reported in the main text of the results 
+# to help explain the three-way statistical interaction
 leftpanel <- data.frame(
-  type_M.vs.A = c("M", "A"),
+  type = c("M", "A"),
+  subtype_Poll.vs.Disp = c(0, 0),
+  subtype_Herb.vs.Para = c(0, 0),
   sc.c_ND = c(-1, -1),
   sc.r_ND = c(1, 1)
 )
-predict(full.brm, newdata = leftpanel)
+fitted(full.brm, newdata = leftpanel, scale = "response", re_formula = NA)
 
 rightpanel <- data.frame(
-  type_M.vs.A = c("M", "A"),
+  type = c("M", "A"),
+  subtype_Poll.vs.Disp = c(0, 0), 
+  subtype_Herb.vs.Para = c(0, 0), 
   sc.c_ND = c(1, 1),
   sc.r_ND = c(-1, -1)
 )
-predict(full.brm, newdata = rightpanel)
+fitted(full.brm, newdata = rightpanel, scale = "response", re_formula = NA)
 ```
 
 
-```{r three-way interaction plot, echo=FALSE, fig.cap="Asymmetric normalized degrees enhance partner fidelity in mutualistic vs. antagonistic interactions. Lines and bands correspond to predicted means and 95\% credible intervals from our full model. Orange and blue colors correspond to mutualistic and antagonistic interactions, respectively. As expected, increasing normalized degree of resources enhances partner fidelity for both mutualistic and antagonistic interactions; however, mutualistic interactions have relatively higher partner fidelity when there is an asymmetry in partner normalized degrees. For example, mutualistic interactions enhance partner fidelity for specialized consumers (scaled ND = -1) and generalist resources (scaled ND > 0) relative to antagonistic interactions. Likewise, mutualistic interactions enhance partner fidelity for generalized consumers (scaled ND = 1) and specialist resources (scaled ND < 0) relative to antagonistic interactions.", include=FALSE}
+```{r three-way interaction plot, echo=FALSE, fig.cap="Asymmetric normalized degrees enhance partner fidelity in mutualistic vs. antagonistic interactions. Lines and bands correspond to predicted means and 95% credible intervals from our full model. Orange and blue colors correspond to mutualistic and antagonistic interactions, respectively. As expected, increasing normalized degree of resources enhances partner fidelity for both mutualistic and antagonistic interactions; however, mutualistic interactions have relatively higher partner fidelity when there is an asymmetry in partner normalized degrees. For example, mutualistic interactions enhance partner fidelity for specialized consumers (scaled ND = -1) and generalist resources (scaled ND > 0) relative to antagonistic interactions. Likewise, mutualistic interactions enhance partner fidelity for generalized consumers (scaled ND = 1) and specialist resources (scaled ND < 0) relative to antagonistic interactions.", include=FALSE}
 # we like this perspective the most.
 # as above, suggests to me that specialized consumers have a much higher probability of interacting with generalist resources 
 # in mutualistic vs. antagonistic interactions
