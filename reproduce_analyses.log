@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2019.2.7)  14 JUN 2019 14:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2019.2.7)  14 JUN 2019 16:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1051,28 +1051,28 @@ LaTeX Font Info:    Font shape `U/msb/m/n' will be
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <12> not available
-(Font)              Font shape `T1/ppl/b/n' tried instead on input line 171.
-LaTeX Font Info:    Try loading font information for TS1+ppl on input line 203.
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 172.
+LaTeX Font Info:    Try loading font information for TS1+ppl on input line 204.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ppl.fd
 File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
 )
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/ppl/b/n' tried instead on input line 203.
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 204.
 [2pdfTeX warning (ext4): destination with the same identifier (name{table.1}) h
 as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.253 \end{table}
-                 ] [3pdfTeX warning (ext4): destination with the same identifie
-r (name{table.2}) has been already used, duplicate ignored
+l.231 
+      ] [3pdfTeX warning (ext4): destination with the same identifier (name{tab
+le.2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.296 
+l.297 
       ]
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 298.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 299.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
@@ -1081,72 +1081,72 @@ File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.347 
-      ] [5] [6] [7] [8] [9] [10]
+l.342 \end{Highlighting}
+                        ] [5] [6] [7] [8] [9] [10]
 <reproduce_analyses_files/figure-latex/simulate prior distribution for type-1.p
-df, id=92, 444.66125pt x 311.1625pt>
+df, id=94, 444.66125pt x 311.1625pt>
 File: reproduce_analyses_files/figure-latex/simulate prior distribution for typ
 e-1.pdf Graphic file (type pdf)
 
 <use reproduce_analyses_files/figure-latex/simulate prior distribution for type
 -1.pdf>
 Package pdftex.def Info: reproduce_analyses_files/figure-latex/simulate prior d
-istribution for type-1.pdf used on input line 617.
+istribution for type-1.pdf used on input line 618.
 (pdftex.def)             Requested size: 444.66016pt x 311.16174pt.
 [11pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
  has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.635 \subsubsection
+l.636 \subsubsection
                     {\texorpdfstring{Scaled normalized degree: <./reproduce_ana
 lyses_files/figure-latex/simulate prior distribution for type-1.pdf>] [12]
 <reproduce_analyses_files/figure-latex/simulate prior distribution for normaliz
-ed degree-1.pdf, id=114, 444.66125pt x 311.1625pt>
+ed degree-1.pdf, id=116, 444.66125pt x 311.1625pt>
 File: reproduce_analyses_files/figure-latex/simulate prior distribution for nor
 malized degree-1.pdf Graphic file (type pdf)
 
 <use reproduce_analyses_files/figure-latex/simulate prior distribution for norm
 alized degree-1.pdf>
 Package pdftex.def Info: reproduce_analyses_files/figure-latex/simulate prior d
-istribution for normalized degree-1.pdf used on input line 703.
+istribution for normalized degree-1.pdf used on input line 704.
 (pdftex.def)             Requested size: 444.66016pt x 311.16174pt.
 [13] [14pdfTeX warning (ext4): destination with the same identifier (name{figur
 e.2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.738 
+l.739 
        <./reproduce_analyses_files/figure-latex/simulate prior distribution for
  normalized degree-1.pdf>]
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 744
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 745
 .
 (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-<reproduce_analyses_files/figure-latex/plot-NDxND-1.pdf, id=140, 444.66125pt x 
+<reproduce_analyses_files/figure-latex/plot-NDxND-1.pdf, id=142, 444.66125pt x 
 309.155pt>
 File: reproduce_analyses_files/figure-latex/plot-NDxND-1.pdf Graphic file (type
  pdf)
 <use reproduce_analyses_files/figure-latex/plot-NDxND-1.pdf>
 Package pdftex.def Info: reproduce_analyses_files/figure-latex/plot-NDxND-1.pdf
- used on input line 758.
+ used on input line 759.
 (pdftex.def)             Requested size: 444.66016pt x 309.15424pt.
 [15] [16pdfTeX warning (ext4): destination with the same identifier (name{figur
 e.3}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.781 \subsubsection
+l.782 \subsubsection
                     {\texorpdfstring{Effect of mutualism on partner <./reproduc
 e_analyses_files/figure-latex/plot-NDxND-1.pdf>]
-Overfull \hbox (14.15419pt too wide) in paragraph at lines 783--783
+Overfull \hbox (14.15419pt too wide) in paragraph at lines 784--784
 [][]\T1/ppl/b/n/10.95 Effect of mu-tu-al-ism on part-ner (a)symmetry in nor-mal
 -ized de-grees: type_M.vs.A:sc.r_ND:sc.c_ND 
  []
 
 
-Underfull \hbox (badness 2726) in paragraph at lines 793--801
+Underfull \hbox (badness 2726) in paragraph at lines 794--802
 \T1/ppl/m/n/10.95 (+20) SD=2) for \T1/ppl/b/n/10.95 sc.log.sum_r:sc.log.sum_c, 
 type_M.vs.A:sc.log.sum_r, type_M.vs.A:sc.log.sum_c,
  []
@@ -1160,20 +1160,20 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.913   T
+l.914   T
          here is no clear evidence that mutualistic interactions (relative to] 
 [20pdfTeX warning (ext4): destination with the same identifier (name{table.5}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.957 \begin{Highlighting}[]
+l.958 \begin{Highlighting}[]
                             ] [21] [22pdfTeX warning (ext4): destination with t
 he same identifier (name{table.6}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.1035   A
+l.1036   A
            1 SD increase in consumer normalized degree in mutualistic]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1183,25 +1183,25 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.1132 
+l.1133 
        pdfTeX warning (ext4): destination with the same identifier (name{table.
 8}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.1132 
+l.1133 
        ] [25pdfTeX warning (ext4): destination with the same identifier (name{t
 able.9}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.1184 
+l.1185 
        ] [26pdfTeX warning (ext4): destination with the same identifier (name{t
 able.10}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.1223 ...ok{:}\NormalTok{sc.c_ND }\OperatorTok{+}
+l.1224 ...ok{:}\NormalTok{sc.c_ND }\OperatorTok{+}
                                                   ]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1211,7 +1211,7 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.1291 ...c.log.sum_r:sc.log.sum_c"}\NormalTok{),}
+l.1292 ...c.log.sum_r:sc.log.sum_c"}\NormalTok{),}
                                                   ]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -1243,21 +1243,21 @@ l.20
                                                   \fi \fi 
 l.20 
      ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1406.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1407.
 [32]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1406.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1407.
 (./reproduce_analyses.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1406.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1406.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1407.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1407.
 
 Package rerunfilecheck Info: File `reproduce_analyses.out' has not changed.
 (rerunfilecheck)             Checksum: 42BB75A688289B62FDCB3F38D340F587;660.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1406.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1407.
  ) 
 Here is how much of TeX's memory you used:
  15083 strings out of 493029
  214880 string characters out of 6136235
- 334785 words of memory out of 5000000
+ 327785 words of memory out of 5000000
  18148 multiletter control sequences out of 15000+600000
  35478 words of font info for 159 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1272,10 +1272,10 @@ e/texmf/fonts/type1/public/cm-super/sftt1095.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatin
 o/uplri8a.pfb>
-Output written on reproduce_analyses.pdf (32 pages, 222636 bytes).
+Output written on reproduce_analyses.pdf (32 pages, 223061 bytes).
 PDF statistics:
- 338 PDF objects out of 1000 (max. 8388607)
- 281 compressed objects within 3 object streams
+ 340 PDF objects out of 1000 (max. 8388607)
+ 283 compressed objects within 3 object streams
  73 named destinations out of 1000 (max. 500000)
  14392 words of extra memory for PDF output out of 14400 (max. 10000000)
 

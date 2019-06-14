@@ -70,7 +70,7 @@ options(mc.cores=parallel::detectCores ())
 
 \newpage
 
-All data and code to reproduce the analyses presented below are available on GitHub (https://github.com/mabarbour/partner_fidelity).
+All data and code to reproduce the analyses presented below are available on GitHub (https://github.com/mabarbour/partner_fidelity) and have been archived on Zenodo (https://doi.org/10.5281/zenodo.3246344).
 
 ## Dataset
 
