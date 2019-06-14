@@ -164,6 +164,10 @@
 }
 \newpage
 
+All data and code to reproduce the analyses presented below are
+available on GitHub
+(\url{https://github.com/mabarbour/partner_fidelity}).
+
 \subsection{Dataset}\label{dataset}
 
 Here's a summary of the full dataset we used in our analyses (table
@@ -221,7 +225,8 @@ connected & type & subtype & r\_ND & c\_ND & resource\_sp & consumer\_sp & id\_p
 \end{itemize}
 
 We also analyze a subset of this data that only consists of weighted
-networks (table \ref{tab:weighted-subset-dataset}).
+networks (table \ref{tab:weighted-subset-dataset}), which we use to
+investigate the effects of sampling effort.
 
 \begin{table}[!h]
 
@@ -304,10 +309,10 @@ and resources.
 \end{Shaded}
 
 For \textbf{type}, we created a contrast so that the intercept term
-represents the average probability of an interaction across mutualistic
-and antagonistic interactions, and this coefficient represents the
-effect of mutualistic (relative to antagonistic) interactions (table
-\ref{tab:type-contrasts}).
+represents the average probability (Ave) of an interaction across
+mutualistic (M) and antagonistic (A) interactions, and this coefficient
+represents the effect of mutualistic (relative to antagonistic)
+interactions (table \ref{tab:type-contrasts}).
 
 \begin{table}[!h]
 
@@ -392,16 +397,17 @@ function of all main effects, as well as two- and three-way interactions
 between the type of interaction (\textbf{type}) and scaled normalized
 degree of resources (\textbf{sc.r\_ND}) and consumers
 (\textbf{sc.c\_ND})(fixed effects). Note that we only test for main
-effects of network subtypes within the type of interaction. This models
+effects of network subtypes within the type of interaction. This model
 also allows the probability of interactions to vary among resource and
 consumer species, the unique consumer-resource pair, as well as among
 unique ecological networks (random effects). Note that by including the
 unique consumer-resource pair as a random effect, we are testing how the
-different factors in our model influence partner fidelity (probability
-of an interaction when two species co-occur). Note also that specifying
-a Bernoulli distribution on the logit scale for the error distribution
-in our model makes it so that the fixed and random effects in our
-statistical model represent effects on the log odds of partner fidelity.
+different factors in our model influence partner fidelity (i.e.,
+probability of two species to interact when they co-occur). Note also
+that specifying a Bernoulli distribution on the logit scale for the
+error distribution in our model makes it so that the fixed and random
+effects in our statistical model represent effects on the log odds of
+partner fidelity.
 
 For the subset of data, we also fit the following model:
 
@@ -601,7 +607,7 @@ corresponds to a logistic regression coefficient of
 We would expect such a large effect to be unlikely though. Also, we have
 no strong prior expectation as to whether mutualistic or antagonistic
 interactions will have a positive or negative effect on partner
-fidelity. So let's explore what a normal distribution looks like where
+fidelity. So let's explore what a normal distribution looks like when
 the coefficient is centered on zero, but the variance is large enough to
 allow for a large effect (\textbf{type\_M.vs.A} = 2.2, denoted by dotted
 line below) if there is enough evidence to support it.
@@ -755,7 +761,7 @@ b\_sc.r\_ND:sc.c\_ND determines how symmetry (righ panel) or asymmetry
 (left panel) in partners normalized degree affects partner fidelity.}
 \end{figure}
 
-By inspecting figure \ref{fig:plot-NDxND}, you can see how the sign of
+By inspecting figure \ref{fig:plot-NDxND}, one can see how the sign of
 the statistical interaction between resource and consumer normalized
 degree affects the log odds of an interaction. When the sign is positive
 (right panel), symmetric normalized degrees increase the probability of
@@ -835,8 +841,6 @@ table.
 \end{Highlighting}
 \end{Shaded}
 
-~
-
 \begin{table}[!h]
 
 \caption{\label{tab:full-table}Mean and 95\% credible intervals of fixed effects from our full model.}
@@ -858,6 +862,22 @@ type\_M.vs.A:sc.r\_ND:sc.c\_ND & -0.78 & -1.01 & -0.52\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+~
+
+Our model provided a good fit to our data, explaining 40\% of the
+variance.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{bayes_R2}\NormalTok{(full.brm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     Estimate   Est.Error      Q2.5     Q97.5
+## R2 0.4010955 0.006517277 0.3883389 0.4139209
+\end{verbatim}
 
 ~
 
@@ -1102,11 +1122,13 @@ sd\_resource\_sp\_\_Intercept & 0.41 & 0.23 & 0.58\\
 effort}\label{testing-for-bias-due-to-sampling-effort}
 
 Our goal here is to test whether sampling effort can explain the results
-we observed in the previous models, in particular, the effect of
-interaction type and its three-way statistical interaction with resource
-and consumer normalized degree. As a reminder, we replaced normalized
-degree with the log of observed interactions for both resources and
-consumers.
+we observed in the previous models, in particular, the three-way
+statistical interaction with resource and consumer normalized degree. As
+a reminder, we replaced normalized degree with the log of observed
+interactions for both resources and consumers. The logic behind this
+model is that, if we observe a three-way statistical interaction with
+the observed interactions of resources and consumers, then our previous
+results could simply be due to variation in sampling effort.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1145,18 +1167,16 @@ sc.log.sum\_r:sc.log.sum\_c & 0.26 & 0.10 & 0.42\\
 Inspecting the table of fixed effects (table \ref{tab:sampling-table}),
 there are a few results worth noting. First, the effect of pollination
 (relative to seed dispersal) on partner fidelity has reversed; in other
-words, it now has a negative effect (\emph{what exactly does this
-mean?}, \textbf{subtype\_Poll.vs.Disp} in table
-\ref{tab:sampling-table}). Second, mutualistic interactions increase the
-positive effect of observed consumer interactions on partner fidelity
-(\emph{what exactly does this mean?},
-\textbf{type\_M.vs.A:sc.log.sum\_c} in table \ref{tab:sampling-table}).
-Third, we do not see evidence of a three-way interaction between the
-observed interactions of resources and consumers and interaction type
-(\textbf{type\_M.vs.A:sc.log.sum\_r:sc.log.sum\_c} in table
-\ref{tab:sampling-table}). This indicates that sampling effects cannot
-explain the effect of mutualistic interactions on partner fidelity
-(\textbf{type\_M.vs.A} in tables \ref{tab:full-table},
+words, it now has a negative effect (\textbf{subtype\_Poll.vs.Disp} in
+table \ref{tab:sampling-table}). Second, mutualistic interactions
+increase the positive effect of observed consumer interactions on
+partner fidelity (\textbf{type\_M.vs.A:sc.log.sum\_c} in table
+\ref{tab:sampling-table}). Third, we do not see evidence of a three-way
+interaction between the observed interactions of resources and consumers
+and interaction type (\textbf{type\_M.vs.A:sc.log.sum\_r:sc.log.sum\_c}
+in table \ref{tab:sampling-table}). This indicates that sampling effects
+cannot explain the effect of mutualistic interactions on partner
+fidelity (\textbf{type\_M.vs.A} in tables \ref{tab:full-table},
 \ref{tab:weighted-table}) or the three-way interaction between
 normalized degree of resources and consumers and interaction type that
 we observed in previous models (\textbf{type\_M.vs.A:sc.r\_ND:sc.c\_ND}
@@ -1187,8 +1207,10 @@ sd\_resource\_sp\_\_Intercept & 0.40 & 0.25 & 0.57\\
 \subsubsection{Alternative models to account for sampling
 effort}\label{alternative-models-to-account-for-sampling-effort}
 
-There are alternative ways we can account for sampling effort. For
-example, we could fit a model where resource and consumer observed
+In addition to accounting for sampling effort by replacing the
+normalized degree of the resource and consumer with observed
+interactions, there are other ways we can account for sampling effort.
+First, we could fit a model where resource and consumer observed
 interactions are simply covariates in a model that includes main effects
 and statistical interactions for resource and consumer normalized
 degree:
@@ -1247,8 +1269,10 @@ sc.r\_ND:sc.c\_ND & 0.30 & 0.03 & 0.58\\
 \end{tabular}
 \end{table}
 
-Or alternatively, we can include an additional term that accounts for
-(a)symmetric effects of observed interactions (i.e.,
+~
+
+Second, we can include an additional term that accounts for (a)symmetric
+effects of observed interactions (i.e.,
 \textbf{sc.log.sum\_r:sc.log.sum\_c}):
 
 \begin{Shaded}
