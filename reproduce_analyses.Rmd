@@ -94,7 +94,7 @@ sample_n(full.df, size=10) %>%
 - **network_id**: ecological network ID (n = `r length(unique(full.df$network_id))`; labels match those on the [Web of Life](http://www.web-of-life.es/))
 
 
-We also analyze a subset of this data that only consists of weighted networks (table \ref{tab:weighted-subset-dataset}). 
+We also analyze a subset of this data that only consists of weighted networks (table \ref{tab:weighted-subset-dataset}), which we use to investigate the effects of sampling effort. 
 
 ```{r weighted-subset-dataset, echo=FALSE}
 sample_n(weighted_subset.df, size=10) %>%
@@ -137,7 +137,7 @@ weighted_subset.df <- weighted_subset.df %>%
 ```
 
 
-For **type**, we created a contrast so that the intercept term represents the average probability of an interaction across mutualistic and antagonistic interactions, and this coefficient represents the effect of mutualistic (relative to antagonistic) interactions (table \ref{tab:type-contrasts}).
+For **type**, we created a contrast so that the intercept term represents the average probability (Ave) of an interaction across mutualistic (M) and antagonistic (A) interactions, and this coefficient represents the effect of mutualistic (relative to antagonistic) interactions (table \ref{tab:type-contrasts}).
 
 ```{r type-contrasts, echo=F}
 # create contrast matrix
@@ -274,7 +274,7 @@ interaction_subset.formula <- brmsformula(
 # PlantHerbivore interactions in the weighted subset.
 ```
 
-These models analyze the probability of a species interaction as a function of all main effects, as well as two- and three-way interactions between the type of interaction (**type**) and scaled normalized degree of resources (**sc.r_ND**) and consumers (**sc.c_ND**)(fixed effects). Note that we only test for main effects of network subtypes within the type of interaction. This models also allows the probability of interactions to vary among resource and consumer species, the unique consumer-resource pair, as well as among unique ecological networks (random effects). Note that by including the unique consumer-resource pair as a random effect, we are testing how the different factors in our model influence partner fidelity (probability of an interaction when two species co-occur). Note also that specifying a Bernoulli distribution on the logit scale for the error distribution in our model makes it so that the fixed and random effects in our statistical model represent effects on the log odds of partner fidelity.
+These models analyze the probability of a species interaction as a function of all main effects, as well as two- and three-way interactions between the type of interaction (**type**) and scaled normalized degree of resources (**sc.r_ND**) and consumers (**sc.c_ND**)(fixed effects). Note that we only test for main effects of network subtypes within the type of interaction. This model also allows the probability of interactions to vary among resource and consumer species, the unique consumer-resource pair, as well as among unique ecological networks (random effects). Note that by including the unique consumer-resource pair as a random effect, we are testing how the different factors in our model influence partner fidelity (i.e., probability of two species to interact when they co-occur). Note also that specifying a Bernoulli distribution on the logit scale for the error distribution in our model makes it so that the fixed and random effects in our statistical model represent effects on the log odds of partner fidelity.
 
 For the subset of data, <!--To test for sampling effects, -->we also fit the following model:
 
@@ -387,7 +387,7 @@ pA <- 0.25
 ```
 
 
-We would expect such a large effect to be unlikely though. Also, we have no strong prior expectation as to whether mutualistic or antagonistic interactions will have a positive or negative effect on partner fidelity. So let's explore what a normal distribution looks like where the coefficient is centered on zero, but the variance is large enough to allow for a large effect (**type_M.vs.A** = 2.2, denoted by dotted line below) if there is enough evidence to support it.
+We would expect such a large effect to be unlikely though. Also, we have no strong prior expectation as to whether mutualistic or antagonistic interactions will have a positive or negative effect on partner fidelity. So let's explore what a normal distribution looks like when the coefficient is centered on zero, but the variance is large enough to allow for a large effect (**type_M.vs.A** = 2.2, denoted by dotted line below) if there is enough evidence to support it.
 
 ```{r simulate prior distribution for type, echo=FALSE, fig.cap="Simulating prior distributions for the effect of interaction type."}
 samp <- 1000
@@ -536,7 +536,7 @@ ggplot(sim.log.odds, aes(x = delta.sc.r_ND, y = delta.sc.c_ND, z=diff.log.odds))
   ylab(expression(paste(Delta, "sc.c_ND"))) 
 ```
 
-By inspecting figure \ref{fig:plot-NDxND}, you can see how the sign of the statistical interaction between resource and consumer normalized degree affects the log odds of an interaction. When the sign is positive (right panel), symmetric normalized degrees increase the probability of an interaction (relative to main effects). In contrast, when the sign is negative (left panel), asymmetric normalized degrees increase the probability of an interaction. For example, if a relatively specialized consumer ($\Delta$sc.c_ND = -1) interacts with a relatively generalist resource ($\Delta$sc.r_ND = +1), there is an increase in the log-odds of an interaction (yellow spot in lower right corner of left panel in fig. \ref{fig:plot-NDxND}).
+By inspecting figure \ref{fig:plot-NDxND}, one can see how the sign of the statistical interaction between resource and consumer normalized degree affects the log odds of an interaction. When the sign is positive (right panel), symmetric normalized degrees increase the probability of an interaction (relative to main effects). In contrast, when the sign is negative (left panel), asymmetric normalized degrees increase the probability of an interaction. For example, if a relatively specialized consumer ($\Delta$sc.c_ND = -1) interacts with a relatively generalist resource ($\Delta$sc.r_ND = +1), there is an increase in the log-odds of an interaction (yellow spot in lower right corner of left panel in fig. \ref{fig:plot-NDxND}).
 
 Since we had no prior expectation as to how symmetry or asymmetry would affect partner fidelity, we set a normal prior with mean=0 and SD=2 to cover the range of most logistic regression coefficients [@Gelman2008]. 
 
@@ -794,7 +794,7 @@ tidy(weighted_subset.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.
 
 ### Testing for bias due to sampling effort
 
-Our goal here is to test whether sampling effort can explain the results we observed in the previous models, in particular, the effect of interaction type and its three-way statistical interaction with resource and consumer normalized degree. As a reminder, we replaced normalized degree with the log of observed interactions for both resources and consumers.
+Our goal here is to test whether sampling effort can explain the results we observed in the previous models, in particular, the three-way statistical interaction with resource and consumer normalized degree. As a reminder, we replaced normalized degree with the log of observed interactions for both resources and consumers. The logic behind this model is that, if we observe a three-way statistical interaction with the observed interactions of resources and consumers, then our previous results could simply be due to variation in sampling effort.
 
 ```{r run sampling effects model, cache=TRUE, results="hide", message=F}
 sampling_effects.brm <- brm(
@@ -817,7 +817,7 @@ tidy(sampling_effects.brm, par_type = "non-varying", intervals = TRUE, prob = 0.
 ```
 
 
-Inspecting the table of fixed effects (table \ref{tab:sampling-table}), there are a few results worth noting. First, the effect of pollination (relative to seed dispersal) on partner fidelity has reversed; in other words, it now has a negative effect (*what exactly does this mean?*, **subtype_Poll.vs.Disp** in table \ref{tab:sampling-table}). Second, mutualistic interactions increase the positive effect of observed consumer interactions on partner fidelity (*what exactly does this mean?*, **type_M.vs.A:sc.log.sum_c** in table \ref{tab:sampling-table}). Third, we do not see evidence of a three-way interaction between the observed interactions of resources and consumers and interaction type (**type_M.vs.A:sc.log.sum_r:sc.log.sum_c** in table \ref{tab:sampling-table}). This indicates that sampling effects cannot explain the effect of mutualistic interactions on partner fidelity (**type_M.vs.A** in tables \ref{tab:full-table}, \ref{tab:weighted-table}) or the three-way interaction between normalized degree of resources and consumers and interaction type that we observed in previous models (**type_M.vs.A:sc.r_ND:sc.c_ND** in tables \ref{tab:full-table}, \ref{tab:weighted-table}).
+Inspecting the table of fixed effects (table \ref{tab:sampling-table}), there are a few results worth noting. First, the effect of pollination (relative to seed dispersal) on partner fidelity has reversed; in other words, it now has a negative effect (**subtype_Poll.vs.Disp** in table \ref{tab:sampling-table}). Second, mutualistic interactions increase the positive effect of observed consumer interactions on partner fidelity (**type_M.vs.A:sc.log.sum_c** in table \ref{tab:sampling-table}). Third, we do not see evidence of a three-way interaction between the observed interactions of resources and consumers and interaction type (**type_M.vs.A:sc.log.sum_r:sc.log.sum_c** in table \ref{tab:sampling-table}). This indicates that sampling effects cannot explain the effect of mutualistic interactions on partner fidelity (**type_M.vs.A** in tables \ref{tab:full-table}, \ref{tab:weighted-table}) or the three-way interaction between normalized degree of resources and consumers and interaction type that we observed in previous models (**type_M.vs.A:sc.r_ND:sc.c_ND** in tables \ref{tab:full-table}, \ref{tab:weighted-table}).
 
 The results for the random effects are similar to the other models (tables \ref{tab:full-table-random}, \ref{tab:weighted-table-random}), except that the most important random effect has changed to **id_pair**, although **network_id** is a close second (table \ref{tab:sampling-table-random}).
 
@@ -834,7 +834,7 @@ tidy(sampling_effects.brm, par_type = "hierarchical", intervals = TRUE, prob = 0
 
 ### Alternative models to account for sampling effort
 
-There are alternative ways we can account for sampling effort. For example, we could fit a model where resource and consumer observed interactions are simply covariates in a model that includes main effects and statistical interactions for resource and consumer normalized degree:
+In addition to accounting for sampling effort by replacing the normalized degree of the resource and consumer with observed interactions, there are other ways we can account for sampling effort. First, we could fit a model where resource and consumer observed interactions are simply covariates in a model that includes main effects and statistical interactions for resource and consumer normalized degree:
 
 ```{r run subset sampling model, cache=TRUE, results="hide", message=F}
 subset.sampling_formula <- brmsformula(
@@ -878,7 +878,9 @@ tidy_subset.sampling_brm %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-Or alternatively, we can include an additional term that accounts for (a)symmetric effects of observed interactions (i.e., **sc.log.sum_r:sc.log.sum_c**):
+\ 
+
+Second, we can include an additional term that accounts for (a)symmetric effects of observed interactions (i.e., **sc.log.sum_r:sc.log.sum_c**):
 
 ```{r run subset sampling model v2, cache=TRUE, results="hide", message=F}
 subset.sampling.v2_formula <- brmsformula(
