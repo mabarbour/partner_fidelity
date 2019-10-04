@@ -1,4 +1,4 @@
-## Rarefaction
+## Address Reviewer 2's comments
 
 ## Prep ----
 
@@ -109,102 +109,15 @@ weighted_subset.df <- weighted_subset.df %>%
   mutate(subtype_Poll.vs.Disp = ifelse(type == "A", 0,
                                        ifelse(subtype == "PlantPollinator", 1/2, -1/2)))
 
-#### 10.4.Fri ----
-summary(weighted_subset.df$sum_shared) # huge variation in number of observed interactions
-hist(log1p(weighted_subset.df$sum_shared)) # log distribution is still quite skewed
 
-# make really long with number of observed interactions
-weighted_long <- select(weighted_subset.df, network_id, type, subtype, resource_sp, consumer_sp, connected, sum_shared)
+## Do antagonistic networks have on average fewer total interactions tallied than mutualistic? ----
 
-# for each interaction, replicate it as many times as it was observed
-weighted_long.list <- list()
-for(i in 1:nrow(weighted_long)){ 
-  if(weighted_long$sum_shared[i] > 0){
-    weighted_long.list[[i]] <- slice(weighted_long[i, ], rep(1:n(), each = weighted_long$sum_shared[i]))
-  } else {
-    weighted_long.list[[i]] <- weighted_long[i, ]
-  }
-}
-weighted_long.df <- plyr::ldply(weighted_long.list) %>% select(-sum_shared) # tidy into a dataframe
-head(weighted_long.df)
-
-# now I need to randomly subsample the antagonistic networks to the mutualistic ones
-table(distinct(weighted_long.df, network_id, subtype)$subtype) 
-
-subsample_A_networks <- distinct(filter(weighted_long.df, type == "A"), network_id) %>% sample_n(size = 19, replace = F) 
-subsample_A_networks
-
-#assign_pollinator <- subsample_A_networks$network_id[1:10]
-#assign_disperser <- subsample_A_networks$network_id[11:19]
-
-#pollinator_networks <- distinct(filter(weighted_long.df, type == "M", subtype == "PlantPollinator"), network_id)
-#disperser_networks <- distinct(filter(weighted_long.df, type == "M", subtype == "PlantSeedDisperser"), network_id)
-
-M_networks <- distinct(filter(weighted_long.df, type == "M"), network_id) # no need to subsample because there are fewer
-# also the randomization is already done with the subsample_A_networks
-
-random_pairs <- data.frame(network_pairs = LETTERS[1:19],
-           M = as.character(M_networks$network_id),
-           A = as.character(subsample_A_networks$network_id))
-
-# for all but one occassion, the mutualistic networks have fewer observed interactions
-subsample_df <- left_join(random_pairs, select(weighted_subset.df.network_level, M = network_id, M_sum = sum_shared)) %>%
-  left_join(., select(weighted_subset.df.network_level, A = network_id, A_sum = sum_shared)) %>%
-  mutate(subsample_size = ifelse(M_sum < A_sum, M_sum, A_sum)) %>%
-  select(network_pairs, M, A, subsample_size) %>%
-  gather(type, network_id, -subsample_size, -network_pairs)
-
-# now I need to make the new data frame based on the random subsample
-new_data <- weighted_long.df %>%
-  filter(network_id %in% c(as.character(M_networks$network_id), as.character(subsample_A_networks$network_id))) %>%
-  # distinct(network_id) # checked and it worked
-  group_by(network_id) %>%
-  nest() %>%
-  left_join(., subsample_df) %>%
-  # following example from: https://jennybc.github.io/purrr-tutorial/ls12_different-sized-samples.html
-  mutate(samp = map2(data, subsample_size, sample_n)) %>%
-  select(-data) %>%
-  unnest(samp) %>%
-  # now that I've subsampled, I can reduce the dataset to the normal size for analysis
-  # i.e. only 1 interaction per pair per network
-  distinct %>%
-  # add back in some data for the analysis
-  left_join(., select(weighted_subset.df, network_id, resource_sp, consumer_sp, id_pair, sc.r_ND, sc.c_ND))
-  
-# run test with glmer
-library(lme4)
-new_glmer <- glmer(connected ~ subtype + type*sc.r_ND*sc.c_ND + (1|consumer_sp) + (1|resource_sp) + (1|id_pair) + (1|network_id), 
-                    data = new_data, family = binomial(link = "logit"), 
-                    control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-
-# get model effects for 3-way interaction term
-new_glmer_effects <- broom::tidy(new_glmer, effects = "fixed")
-filter(new_glmer_effects, term == "typeM:sc.r_ND:sc.c_ND")$estimate
-filter(new_glmer_effects, term == "typeM:sc.r_ND:sc.c_ND")$p.value
-  
-#### Address Reviewer #2 comments ----
-
-# Do antagonistic networks have on average fewer total interactions tallied than mutualistic?
+# group data at network level
 weighted_subset.df.network_level <- weighted_subset.df %>%
   group_by(network_id, type, subtype) %>%
   # we look at both the qualitative (connected) and quantitative (sum_shared) interaction counts
   summarise_at(vars(connected, sum_shared), list(sum)) %>%
   ungroup()
-
-left_join(subsample_A_networks, weighted_subset.df.network_level) %>% left_join(., select(random_pairs, network_pairs, network_id = A))
-left_join(M_networks, weighted_subset.df.network_level) %>% left_join(., select(random_pairs, network_pairs, network_id = M))
-
-# NA values represent pairs that did not co-occur in more than 1 network
-# 0 indicates no interaction in this network
-# 1 indicates an interaction
-filter(weighted_subset.df, network_id == "A_HP_001") %>%
-  select(resource_sp, consumer_sp, connected) %>%
-  spread(consumer_sp, connected)
-
-# as above, except now the value corresponds to the number of observed interactions
-filter(weighted_subset.df, network_id == "A_HP_001") %>%
-  select(resource_sp, consumer_sp, sum_shared) %>%
-  spread(consumer_sp, sum_shared)
 
 # number of unique interactions is higher in antagonistic vs mutualistic networks
 ggplot(weighted_subset.df.network_level, aes(x = type, y = connected)) +
@@ -227,80 +140,88 @@ summary(glm(connected ~ type, data = weighted_subset.df.network_level, family = 
 # but not significantly so, which is surprising
 summary(glm(sum_shared ~ type, data = weighted_subset.df.network_level, family = quasipoisson(link = "log")))
 
-## Get reference statistic
-# didn't converge # ref.glmer <- lme4::glmer(connected ~ subtype + type*sc.r_ND*sc.c_ND + (1|consumer_sp) + (1|resource_sp) + (1|id_pair) + (1|network_id), data = weighted_subset.df, family = binomial(link = "logit"))
-table(distinct(weighted_subset.df, subtype, network_id)$subtype)
+## Rarefaction ----
 
-# max number of interactions sampled in mutualistic network
-max_M_sum_shared <- max(filter(weighted_subset.df.network_level, type == "M")$sum_shared) 
+library(lme4) # using as a substitute for the Bayesian models
 
-# 19 networks 
-filter(weighted_subset.df.network_level, type == "A", sum_shared < max_M_sum_shared)
+# explore distribution of observed interactions
+summary(weighted_subset.df$sum_shared) # huge variation in number of observed interactions
+hist(log1p(weighted_subset.df$sum_shared)) # log distribution is still quite skewed
 
-subsample_A_networks <- filter(weighted_subset.df.network_level, type == "A") %>% sample_n(size = 19, replace = F) %>% mutate(network_id = as.character(network_id)) %>% .$network_id
+## Make really long dataset with number of observed interactions
+weighted_long <- select(weighted_subset.df, network_id, type, subtype, resource_sp, consumer_sp, connected, sum_shared)
 
-assign_pollinator <- subsample_A_networks[1:10]
-assign_disperser <- subsample_A_networks[11:19]
-
-pollinator_networks <- as.character(filter(weighted_subset.df.network_level, type == "M", subtype == "PlantPollinator")$network_id)
-disperser_networks <- as.character(filter(weighted_subset.df.network_level, type == "M", subtype == "PlantSeedDisperser")$network_id)
-
-data.frame(network_pairs = as.character(1:19),
-           M = c(pollinator_networks, disperser_networks),
-           A = c(assign_pollinator, assign_disperser))
-
-
-weighted_subset.df
-
-
-pollinator_networks
-## 
-library(weboflife)
-pollination_networks <- get_networks(interaction_type = "pollination", data_type = "weighted")
-
-test <- pollination_networks[pollinator_networks]
-
-test1 <- test[[1]] %>%
-  gather(Consumer, value = InteractionCount, -V1) %>%
-  rename(Resource = V1) %>%
-  filter(InteractionCount > 0) %>%
-  unite(col = "ConsumerResource", Consumer, Resource)
-
-apply(test1, 1, function(x) rep(x[,1], x[,2]))
-
-rep(test1[1,1], test1[1,2]) # this is what I want
-
-## Rarefaction analysis code chunk ----
-min_sample <- min(rowSums(select(df, euro:platy))) # get minimum number of samples
-
-# get individual samples for each site
-individual_samples <- apply(select(df, euro:platy), 1, function(x) rep(names(x), x))
-
-# convert to a list with site information
-samples_list <- list()
-for(i in 1:20){
-  samples_list[[i]] <- data.frame(site = i, species = individual_samples[[i]])
+# for each interaction, replicate it as many times as it was observed
+weighted_long.list <- list()
+for(i in 1:nrow(weighted_long)){ 
+  if(weighted_long$sum_shared[i] > 0){
+    weighted_long.list[[i]] <- slice(weighted_long[i, ], rep(1:n(), each = weighted_long$sum_shared[i]))
+  } else {
+    weighted_long.list[[i]] <- weighted_long[i, ]
+  }
 }
-samples_df <- plyr::ldply(samples_list) # convert to data frame
+weighted_long.df <- plyr::ldply(weighted_long.list) %>% select(-sum_shared) # tidy into a dataframe
+head(weighted_long.df)
 
-# perform rarefaction, keeping track of species identities
-n_sims <- 10000 # number of rarefied samples for each site
+# now I need to randomly subsample the antagonistic networks to the mutualistic ones
+table(distinct(weighted_long.df, network_id, subtype)$subtype) 
 
-sim_data <- list()
+n_sims <- 1000
+
+three_way.FE <- c()
+three_way.P <- c()
 for(i in 1:n_sims){
-  # for each site, randomly sample 'min_sample' from each site (without replacement) and store in a data frame
-  sim_data[[i]] <- group_by(samples_df, site) %>% sample_n(., size = min_sample, replace = FALSE) %>% mutate(sim = i)
+  # subsample Antagonistic networks to match the number of mutualistic ones
+  subsample_A_networks <- distinct(filter(weighted_long.df, type == "A"), network_id) %>% sample_n(size = 19, replace = F) 
+  
+  M_networks <- distinct(filter(weighted_long.df, type == "M"), network_id) # no need to subsample because there are fewer
+  
+  # randomly pair them together (note randomization was already done with subsample_A_networks)
+  random_pairs <- data.frame(network_pairs = LETTERS[1:19],
+                             M = as.character(M_networks$network_id),
+                             A = as.character(subsample_A_networks$network_id))
+  
+  # create data frame to determine subsample size for each network
+  subsample_df <- left_join(random_pairs, select(weighted_subset.df.network_level, M = network_id, M_sum = sum_shared)) %>%
+    left_join(., select(weighted_subset.df.network_level, A = network_id, A_sum = sum_shared)) %>%
+    mutate(subsample_size = ifelse(M_sum < A_sum, M_sum, A_sum)) %>%
+    select(network_pairs, M, A, subsample_size) %>%
+    gather(type, network_id, -subsample_size, -network_pairs)
+  
+  # now I need to make the new data frame based on the random subsample
+  new_data <- weighted_long.df %>%
+    filter(network_id %in% c(as.character(M_networks$network_id), as.character(subsample_A_networks$network_id))) %>%
+    # distinct(network_id) # checked and it worked
+    group_by(network_id) %>%
+    nest() %>%
+    left_join(., subsample_df) %>%
+    # following example from: https://jennybc.github.io/purrr-tutorial/ls12_different-sized-samples.html
+    # to get different sample sizes for each group
+    mutate(samp = map2(data, subsample_size, sample_n)) %>%
+    select(-data) %>%
+    unnest(samp) %>%
+    # now that I've subsampled, I can reduce the dataset to the normal size for analysis
+    # i.e. only 1 interaction per pair per network
+    distinct %>%
+    # add back in some data for the analysis
+    left_join(., select(weighted_subset.df, network_id, resource_sp, consumer_sp, id_pair, sc.r_ND, sc.c_ND))
+  
+  # run test with glmer
+  new_glmer <- glmer(connected ~ subtype + type*sc.r_ND*sc.c_ND + (1|consumer_sp) + (1|resource_sp) + (1|id_pair) + (1|network_id), 
+                     data = new_data, family = binomial(link = "logit"), 
+                     control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  
+  # get model effects for 3-way interaction term
+  new_glmer_effects <- broom::tidy(new_glmer, effects = "fixed")
+  three_way.FE[i] <- filter(new_glmer_effects, term == "typeM:sc.r_ND:sc.c_ND")$estimate
+  three_way.P[i] <- filter(new_glmer_effects, term == "typeM:sc.r_ND:sc.c_ND")$p.value
 }
-sim_df <- plyr::ldply(sim_data) 
 
-# aggregate simulation data
-sum_sims <- sim_df %>%
-  group_by(site, species, sim) %>%
-  summarise(abund = n()) %>%
-  arrange(site, sim, species) %>%
-  as.data.frame()
+three_way.FE
+three_way.P
 
-spread_sims <- spread(sum_sims, species, abund, fill=0) %>%
-  # check that total samples for each site is equal to 'min_sample'
-  mutate(check = rowSums(select(., -site, -sim)) - min_sample) # all should be zero
-summary(spread_sims$check) # and they are
+ref.FE <- -0.68
+
+sum(three_way.FE > ref.FE) / length(three_way.FE) # proportion of times that equalizing sample size reduces effect size
+sum(three_way.FE < 0) / length(three_way.FE) # proportion of times that equalizing sample size flips the sign of the effect
+sum(three_way.P < 0.05) / length(three_way.P) # proportion of times the 3-way interaction is statistically significant
