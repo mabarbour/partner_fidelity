@@ -148,7 +148,9 @@ library(lme4) # using as a substitute for the Bayesian models
 summary(weighted_subset.df$sum_shared) # huge variation in number of observed interactions
 hist(log1p(weighted_subset.df$sum_shared)) # log distribution is still quite skewed
 
-## Make really long dataset with number of observed interactions
+## Make really long dataset where each row corresponds to a sample interaction
+
+# focus dataset
 weighted_long <- select(weighted_subset.df, network_id, type, subtype, resource_sp, consumer_sp, connected, sum_shared)
 
 # for each interaction, replicate it as many times as it was observed
@@ -168,8 +170,8 @@ table(distinct(weighted_long.df, network_id, subtype)$subtype)
 
 n_sims <- 1000
 
-three_way.FE <- c()
-three_way.P <- c()
+three_way.FE <- c() # vector of fixed-effect estimate for three-way interaction term
+three_way.P <- c() # vector of P-values for the three-way term
 for(i in 1:n_sims){
   # subsample Antagonistic networks to match the number of mutualistic ones
   subsample_A_networks <- distinct(filter(weighted_long.df, type == "A"), network_id) %>% sample_n(size = 19, replace = F) 
@@ -184,19 +186,21 @@ for(i in 1:n_sims){
   # create data frame to determine subsample size for each network
   subsample_df <- left_join(random_pairs, select(weighted_subset.df.network_level, M = network_id, M_sum = sum_shared)) %>%
     left_join(., select(weighted_subset.df.network_level, A = network_id, A_sum = sum_shared)) %>%
+    # subsample is based on smallest number of observed interactions in a network
     mutate(subsample_size = ifelse(M_sum < A_sum, M_sum, A_sum)) %>%
     select(network_pairs, M, A, subsample_size) %>%
+    # organize for joining to other datasets
     gather(type, network_id, -subsample_size, -network_pairs)
   
   # now I need to make the new data frame based on the random subsample
   new_data <- weighted_long.df %>%
+    # filter to randomly sampled networks
     filter(network_id %in% c(as.character(M_networks$network_id), as.character(subsample_A_networks$network_id))) %>%
-    # distinct(network_id) # checked and it worked
+    # following example from: https://jennybc.github.io/purrr-tutorial/ls12_different-sized-samples.html
+    # to get different sample sizes for each group
     group_by(network_id) %>%
     nest() %>%
     left_join(., subsample_df) %>%
-    # following example from: https://jennybc.github.io/purrr-tutorial/ls12_different-sized-samples.html
-    # to get different sample sizes for each group
     mutate(samp = map2(data, subsample_size, sample_n)) %>%
     select(-data) %>%
     unnest(samp) %>%
@@ -204,6 +208,9 @@ for(i in 1:n_sims){
     # i.e. only 1 interaction per pair per network
     distinct %>%
     # add back in some data for the analysis
+    # note that sc.r_ND and sc.c_ND are calculated from the original data and not the subsampled interactions
+    # I think this is okay, because their normalized degree is based on the entire interaction network
+    # rather than their partner fidelity across networks
     left_join(., select(weighted_subset.df, network_id, resource_sp, consumer_sp, id_pair, sc.r_ND, sc.c_ND))
   
   # run test with glmer
@@ -215,13 +222,31 @@ for(i in 1:n_sims){
   new_glmer_effects <- broom::tidy(new_glmer, effects = "fixed")
   three_way.FE[i] <- filter(new_glmer_effects, term == "typeM:sc.r_ND:sc.c_ND")$estimate
   three_way.P[i] <- filter(new_glmer_effects, term == "typeM:sc.r_ND:sc.c_ND")$p.value
+  print(paste(i/n_sims*100,"% done!")) # track progress
 }
 
-three_way.FE
-three_way.P
+# write data from simulation 
+write_csv(x = data.frame(FixedEffect = three_way.FE, P = three_way.P), path = "data/three_way_permutation_data.csv")
 
+# reference statistic based on three-way term in Table 7 of supplementary material
 ref.FE <- -0.68
 
-sum(three_way.FE > ref.FE) / length(three_way.FE) # proportion of times that equalizing sample size reduces effect size
-sum(three_way.FE < 0) / length(three_way.FE) # proportion of times that equalizing sample size flips the sign of the effect
-sum(three_way.P < 0.05) / length(three_way.P) # proportion of times the 3-way interaction is statistically significant
+# looks to me like equalizing the sample size doesn't alter the distribution of the test statistic,
+# suggesting that our analysis is robust
+ggplot(data.frame(FE = three_way.FE), aes(x = FE)) +
+  geom_histogram(alpha = 0.5, color = "grey") +
+  geom_vline(xintercept = ref.FE, linetype = "dotted") +
+  xlab("Coefficient estimate") +
+  ylab("Count")
+
+# proportion of times that equalizing sample size reduces effect size
+sum(three_way.FE > ref.FE) / length(three_way.FE) # 55% of the time.
+# i.e. since the reference statistic is not larger than 90% or more of the subsampled
+# distribution values, then sampling intensity does not matter for our results.
+
+# proportion of times that equalizing sample size flips the sign of the effect
+sum(three_way.FE > 0) / length(three_way.FE) # 2%
+
+# proportion of times the 3-way interaction is statistically significant
+sum(three_way.P < 0.05) / length(three_way.P) # 35%
+
