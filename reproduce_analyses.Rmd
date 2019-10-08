@@ -612,7 +612,7 @@ tidy_full.brm$term.ord <- factor(tidy_full.brm$term,
                                  #labels = c("Type:Resource(ND):Consumer(ND)","Resource(ND):Consumer(ND)","Type:Consumer(ND)","Type:Resource(ND)","Consumer(ND)","Resource(ND)","Subtype(Poll-vs-Disp)","Subtype(Herb-vs-Para)","Type(M-vs-A)","Intercept"), 
                                  ordered = T)
 
-tidy_full.brm %>%
+full_table_plot <- tidy_full.brm %>%
   ggplot(., aes(x = term.ord, y = estimate)) +
   geom_linerange(aes(ymin = lower, ymax = upper), color = "grey", size = 1.5) +
   geom_point(size = 3) +
@@ -620,6 +620,9 @@ tidy_full.brm %>%
   geom_hline(yintercept = 0, linetype = "dotted") +
   ylab("Coefficient estimate") +
   xlab("")
+
+full_table_plot
+ggsave("plots/full_model_plot.svg")
 ```
 
 \ 
