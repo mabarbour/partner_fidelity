@@ -36,6 +36,7 @@ library(broom)
 library(kableExtra)
 library(gmodels)        # make custom contrasts
 library(codingMatrices) # visualize contrast matrix
+library(lme4)           # for glmer models in permutation routine
 
 # invalidate cache when the tufte version changes
 knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
@@ -100,11 +101,9 @@ We also analyze a subset of this data that only consists of weighted networks (t
 
 ```{r weighted-subset-dataset, echo=FALSE}
 sample_n(weighted_subset.df, size=10) %>%
-  select(connected, type, subtype, r_ND, c_ND, log.sum_r, log.sum_c, resource_sp, consumer_sp, id_pair, network_id) %>%  
+  select(connected, type, subtype, r_ND, c_ND, sum_shared, resource_sp, consumer_sp, id_pair, network_id) %>%  
   mutate(r_ND = round(r_ND, 2), 
-         c_ND = round(c_ND, 2), 
-         log.sum_r = round(log.sum_r, 2), 
-         log.sum_c = round(log.sum_c, 2)) %>%
+         c_ND = round(c_ND, 2)) %>%
   kable(., caption = "Random sample of 10 rows from the subset of weighted networks.", booktabs = T) %>%
   kable_styling(latex_options = c("scale_down", "hold_position"))
 ```
@@ -114,15 +113,14 @@ sample_n(weighted_subset.df, size=10) %>%
 - **subtype**: `r unique(weighted_subset.df$subtype)`
 - **r_ND**: mean = `r round(mean(weighted_subset.df$r_ND), 2)`, SD = `r round(sd(weighted_subset.df$r_ND), 1)`
 - **c_ND**: mean = `r round(mean(weighted_subset.df$c_ND), 2)`, SD = `r round(sd(weighted_subset.df$c_ND), 1)`
-- **log.sum_r**: mean = `r round(mean(weighted_subset.df$log.sum_r), 1)`, SD = `r round(sd(weighted_subset.df$log.sum_r), 1)`
-- **log.sum_c**: mean = `r round(mean(weighted_subset.df$log.sum_c), 1)`, SD = `r round(sd(weighted_subset.df$log.sum_c), 1)`
+- **sum_shared**: mean = `r round(mean(weighted_subset.df$log.sum_r), 1)`, SD = `r round(sd(weighted_subset.df$log.sum_r), 1)`
 - **resource_sp**: n = `r length(unique(weighted_subset.df$resource_sp))`
 - **consumer_sp**: n = `r length(unique(weighted_subset.df$consumer_sp))`
 - **id_pair**: n = `r length(unique(weighted_subset.df$id_pair))`
 - **network_id**: n = `r length(unique(weighted_subset.df$network_id))`
 
 
-Note that the general structure of the subset of data is the same as the full dataset, except we have added two new variables. These variables correspond to the logarithm of observed interactions (sum of interaction frequency) for a resource (**log.sum_r**) and consumer (**log.sum_c**) in a network. These variables give information on sampling effort<!--, which we later use to test whether they can explain our results-->. Note also that we only have three interaction **subtype**s now (no weighted networks for PlantHerbivore).
+Note that the general structure of the subset of data is the same as the full dataset, except we have added one new variable. This variable corresponds to the number of observed interactions (sum of interaction frequency, **sum_shared**) for a consumer-resource pair in a network. This variable gives information on sampling effort<!--, which we later use to test whether they can explain our results-->. Note also that we only have three interaction **subtype**s now (no weighted networks for PlantHerbivore).
 
 Prior to our analyses, we scaled normalized degree (mean = 0, SD = 1) for both consumers and resources. This allowed us to interpret both main effects and statistical interactions within the same model, and also allowed us to easily compare their effect sizes [@Schielzeth2010]. We also scaled the logarithm of observed interactions for both consumers and resources.
 
@@ -230,7 +228,7 @@ subset.type_contrast <- make.contrasts(subset.type_matrix)
 show_subset.type_contrast <- mean_contrasts(subset.type_contrast)
 
 # add column names for clarity
-attr(show_subset.type_contrast, "dimnames")[[2]] <- levels(weighted_subset.df$type)
+attr(show_subset.type_contrast, "dimnames")[[2]] <- levels(weighted_subset.df$type) # should be subtype?
 
 # show contrasts
 show_subset.type_contrast
@@ -277,21 +275,6 @@ interaction_subset.formula <- brmsformula(
 ```
 
 These models analyze the probability of a species interaction as a function of all main effects, as well as two- and three-way interactions between the type of interaction (**type**) and scaled normalized degree of resources (**sc.r_ND**) and consumers (**sc.c_ND**)(fixed effects). Note that we only test for main effects of network subtypes within the type of interaction. This model also allows the probability of interactions to vary among resource and consumer species, the unique consumer-resource pair, as well as among unique ecological networks (random effects). Note that by including the unique consumer-resource pair as a random effect, we are testing how the different factors in our model influence partner fidelity (i.e., probability of two species to interact when they co-occur). Note also that specifying a Bernoulli distribution on the logit scale for the error distribution in our model makes it so that the fixed and random effects in our statistical model represent effects on the log odds of partner fidelity.
-
-For the subset of data, <!--To test for sampling effects, -->we also fit the following model:
-
-```{r sampling effects formula}
-sampling_effects.formula <- brmsformula(
-  connected ~ type + subtype_Poll.vs.Disp + sc.log.sum_r + sc.log.sum_c + 
-    type:sc.log.sum_r + type:sc.log.sum_c + sc.log.sum_r:sc.log.sum_c +
-    type:sc.log.sum_r:sc.log.sum_c +
-    (1 | resource_sp) + (1 | consumer_sp) + (1 | id_pair) + (1 | network_id),
-  family = bernoulli(link = "logit")
-) # again, we do not include subtype_Herb.vs.Para, since we do not have
-# PlantHerbivore interactions in the weighted subset.
-```
-
-This model is similar to the previous models except that we substitute the logarithm of observed interactions for the normalized degree. The logic behind this model is that, if we observe the same patterns as we do when using normalized degree, then our results could simply be due to variation in sampling effort.
 
 
 \ 
@@ -361,15 +344,6 @@ Choosing priors requires thinking on the scale of the model. Therefore, we first
 
 For each of our random effects (**resource_sp**, **consumer_sp**, **id_pair**, and **network_id**), our model estimates the SD that describes the assumed normal distribution in their effect sizes.
 
-For the sampling effects model, the fixed and random effects are the same as before except the baseline is the average logarithm of observed interactions instead of normalized degree. We also replace normalized degree with the following terms: 
-
-- **sc.log.sum_r** = effect of 1 SD increase in the log of observed interactions for a resource.
-- **sc.log.sum_c** = effect of 1 SD increase in the log of observed interactions for a consumer.
-- **type_M.vs.A:sc.log.sum_r** = effect of a mutualistic interaction (relative to antagonistic) on a 1 SD increase in the log of observed interactions for a resource.
-- **type_M.vs.A:sc.log.sum_c** = effect of a mutualistic interaction (relative to antagonistic) on a 1 SD increase in the log of observed interactions for a consumer.
-- **sc.log.sum_r:sc.log.sum_c** = nonadditive effect of 1 SD increase in the log of observed interactions for a resource and consumer across interaction types. A positive value indicates that symmetry in partner observations increases partner fidelity, whereas a negative value indicates that *asymmetry* in partner observations increases partner fidelity.
-- **type_M.vs.A:sc.r_ND:sc.c_ND** = nonadditive effect of a mutualistic interaction (relative to antagonistic) on a 1 SD increase in the logarithm of resource and consumer observed interaction. A positive value indicates that mutualistic interactions enhance the effects of symmetry on partner fidelity, whereas a negative value indicates that mutualistic interactions enhance the effects of *asymmetry*.
-
 Below, we give a justification for each of the prior distributions we chose for these parameters.
 
 ### Type of interaction: **type_M.vs.A**
@@ -391,19 +365,21 @@ pA <- 0.25
 
 We would expect such a large effect to be unlikely though. Also, we have no strong prior expectation as to whether mutualistic or antagonistic interactions will have a positive or negative effect on partner fidelity. So let's explore what a normal distribution looks like when the coefficient is centered on zero, but the variance is large enough to allow for a large effect (**type_M.vs.A** = 2.2, denoted by dotted line below) if there is enough evidence to support it.
 
-```{r simulate prior distribution for type, echo=FALSE, fig.cap="Simulating prior distributions for the effect of interaction type."}
+```{r simulate prior distribution for type, echo=FALSE, fig.cap="Possible prior distributions for the effect of interaction type."}
 samp <- 1000
-sd_type <- data.frame(density = c(rnorm(samp, 0, 0.5),
-                                  rnorm(samp, 0, 1),
-                                  rnorm(samp, 0, 2),
-                                  rnorm(samp, 0, 4)),
-                      standard_deviation = c(rep("sd_0.5", samp),
-                                             rep("sd_1", samp),
-                                             rep("sd_2", samp),
-                                             rep("sd_4", samp)))
-ggplot(sd_type, aes(x = density, fill = standard_deviation)) + 
-  geom_density(alpha = 0.5) + 
-  xlab("type_M.vs.A") +
+series <- seq(-10, 10, length.out = samp)
+sd_type <- data.frame(series = rep(series, 4),
+                      density = c(dnorm(series, 0, 0.5),
+                                  dnorm(series, 0, 1),
+                                  dnorm(series, 0, 2),
+                                  dnorm(series, 0, 4)),
+                      SD = c(rep("0.5", samp),
+                             rep("1", samp),
+                             rep("2", samp),
+                             rep("4", samp)))
+ggplot(sd_type, aes(x = series, y = density, color = SD)) + 
+  geom_line() + 
+  xlab("Coefficient estimate") +
   ylab("Density") +
   scale_fill_discrete(name = "SD", labels = c(0.5, 1, 2, 4)) +
   geom_vline(xintercept = mu_mutualist, linetype = "dotted") # big effect
@@ -453,19 +429,20 @@ pGen_c <- mean(full.df$c_ND) + sd(full.df$c_ND)
 
 These examples indicate that we should have a prior expectation for the mean estimate of these coefficients to be ~1. How much variance around this coefficient might we expect though? Let's simulate a normal distribution with mean=1 (dotted line below), but different variances:
 
-```{r simulate prior distribution for normalized degree, echo=FALSE, fig.cap="Simulating prior distributions for the effect of scaled normalized degree."}
+```{r simulate prior distribution for normalized degree, echo=FALSE, fig.cap="Potential prior distributions for the effect of scaled normalized degree."}
 samp <- 1000
-sd_sp1 <- data.frame(density = c(rnorm(samp, mu_sc.r_ND, 0.5),
-                                 rnorm(samp, mu_sc.r_ND, 1),
-                                 rnorm(samp, mu_sc.r_ND, 2),
-                                 rnorm(samp, mu_sc.r_ND, 4)),
-                     standard_deviation = c(rep("sd_0.5", samp),
-                                            rep("sd_1", samp),
-                                            rep("sd_2", samp),
-                                            rep("sd_4", samp)))
-ggplot(sd_sp1, aes(x = density, fill = standard_deviation)) + 
-  geom_density(alpha = 0.5) + 
-  xlab("sc.(r/c)_ND") +
+sd_sp1 <- data.frame(series = series,
+                     density = c(dnorm(series, mu_sc.r_ND, 0.5),
+                                 dnorm(series, mu_sc.r_ND, 1),
+                                 dnorm(series, mu_sc.r_ND, 2),
+                                 dnorm(series, mu_sc.r_ND, 4)),
+                     SD = c(rep("0.5", samp),
+                            rep("1", samp),
+                            rep("2", samp),
+                            rep("4", samp)))
+ggplot(sd_sp1, aes(x = series, y = density, color = SD)) + 
+  geom_line() + 
+  xlab("Coefficient estimate") +
   ylab("Density") +
   scale_fill_discrete(name = "SD", labels = c(0.5, 1, 2, 4)) +
   geom_vline(xintercept = 1, linetype = "dotted")
@@ -524,8 +501,8 @@ sim.log.odds <- expand.grid(
          diff.log.odds = log.odds.connected - main.log.odds)
 ```
 
-```{r plot-NDxND, echo=F, fig.cap="\\label{fig:plot-NDxND}Plot of how the sign of b_sc.r_ND:sc.c_ND determines how symmetry (righ panel) or asymmetry (left panel) in partners normalized degree affects partner fidelity.", warning=FALSE}
-labels_2D <- list("-1"="b_sc.r_ND:sc.c_ND = -1", "1"="b_sc.r_ND:sc.c_ND = 1")
+```{r plot-NDxND, echo=F, fig.cap="\\label{fig:plot-NDxND}Plot of how the sign of the statistical interaction between resource and consumer normalized degrees (b_sc.r_ND:sc.c_ND) determines how symmetry (right panel) or asymmetry (left panel) in partners normalized degree affects partner fidelity.", warning=FALSE}
+labels_2D <- list("-1"="Coefficient of normalized degree interaction\n(b_sc.r_ND:sc.c_ND) = -1", "1"="Coefficient of normalized degree interaction\n(b_sc.r_ND:sc.c_ND) = 1")
 labeller_2D <- function(variable, value) {
   return(labels_2D[value])
 }
@@ -534,8 +511,9 @@ ggplot(sim.log.odds, aes(x = delta.sc.r_ND, y = delta.sc.c_ND, z=diff.log.odds))
   geom_raster(aes(fill = diff.log.odds)) +
   facet_wrap(~factor(`b_sc.r_ND:sc.c_ND`), labeller = labeller_2D) +
   scale_fill_viridis_c(name = expression(paste(Delta, "log odds"))) +
-  xlab(expression(paste(Delta, "sc.r_ND"))) +
-  ylab(expression(paste(Delta, "sc.c_ND"))) 
+  xlab(expression(paste("Effect of resource normalized degree (", Delta, "sc.r_ND)"))) +
+  ylab(expression(paste("Effect of consumer normalized degree (", Delta, "sc.c_ND)"))) +
+  theme_cowplot(font_size = 10)
 ```
 
 By inspecting figure \ref{fig:plot-NDxND}, one can see how the sign of the statistical interaction between resource and consumer normalized degree affects the log odds of an interaction. When the sign is positive (right panel), symmetric normalized degrees increase the probability of an interaction (relative to main effects). In contrast, when the sign is negative (left panel), asymmetric normalized degrees increase the probability of an interaction. For example, if a relatively specialized consumer ($\Delta$sc.c_ND = -1) interacts with a relatively generalist resource ($\Delta$sc.r_ND = +1), there is an increase in the log-odds of an interaction (yellow spot in lower right corner of left panel in fig. \ref{fig:plot-NDxND}).
@@ -604,7 +582,7 @@ We specified a half-normal prior with mean=0 and SD=2 for each of the random eff
 
 We used the *brms* package [@Burkner2017] and its default sampling behavior (four sampling chains for 2000 iterations each, discarding the first 1000 iterations as burn-in) to fit these statistical models. To mitigate bias in the posterior sampling distribution, we set **adapt_delta = 0.99** and **max_treedepth = 20**.
 
-For the majority of our inferences below, we keep coefficients on the log odds scale. This is because effect sizes are invariant on this scale. For intercept terms, we make inferences on the probability scale, and note the specific values at which this effect is measured. To calculate probabilities, we applied the inverse logit, $\frac{\exp(\beta)}{\exp(\beta)+1}$, to estimates reported in each table. 
+For the majority of our inferences below, we keep coefficients on the log odds scale. This is because effect sizes are invariant on this scale. For intercept terms, we make inferences on the probability scale, and note the specific values at which this effect is measured. To calculate probabilities, we applied the inverse logit, $\frac{\exp(\beta)}{\exp(\beta)+1}$, to estimates reported in each plot. 
 
 ### Full model
 
@@ -616,7 +594,7 @@ full.brm <- brm(
   control = list(adapt_delta = 0.99, max_treedepth = 20))
 ```
 
-```{r full-table, echo=FALSE}
+```{r full-table, echo=FALSE, include=FALSE}
 tidy_full.brm <- tidy(full.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) 
 
 tidy_full.brm %>%
@@ -626,6 +604,22 @@ tidy_full.brm %>%
             `97.5%` = round(upper, 2)) %>%
   knitr::kable(., caption = "Mean and 95\\% credible intervals of fixed effects from our full model.", booktabs = T, linesep = "") %>%
   kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+```{r full-table-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of fixed effects from our full model.", out.width="75%", fig.align="center"}
+tidy_full.brm$term.ord <- factor(tidy_full.brm$term, 
+                                 levels = c("type_M.vs.A:sc.r_ND:sc.c_ND", "sc.r_ND:sc.c_ND", "type_M.vs.A:sc.c_ND", "type_M.vs.A:sc.r_ND", "sc.c_ND", "sc.r_ND", "subtype_Poll.vs.Disp", "subtype_Herb.vs.Para", "type_M.vs.A", "Intercept"),
+                                 #labels = c("Type:Resource(ND):Consumer(ND)","Resource(ND):Consumer(ND)","Type:Consumer(ND)","Type:Resource(ND)","Consumer(ND)","Resource(ND)","Subtype(Poll-vs-Disp)","Subtype(Herb-vs-Para)","Type(M-vs-A)","Intercept"), 
+                                 ordered = T)
+
+tidy_full.brm %>%
+  ggplot(., aes(x = term.ord, y = estimate)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey", size = 1.5) +
+  geom_point(size = 3) +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  ylab("Coefficient estimate") +
+  xlab("")
 ```
 
 \ 
@@ -638,7 +632,7 @@ bayes_R2(full.brm)
 
 \ 
 
-Below, we give a biological interpretation of each term in this model (table \ref{tab:full-table}):
+Below, we give a biological interpretation of each term in this model (fig. \ref{fig:full-table-plot}):
 
 - On the probability scale, the average level of partner fidelity across interaction types equals `r round(boot::inv.logit(tidy_full.brm$estimate[1]), 2)`($=\frac{\exp(\beta)}{\exp(\beta)+1}$, where $\beta=$ `r round(tidy_full.brm$estimate[1], 2)`) for the average level of normalized degree for a resource and consumer. 
 
@@ -690,9 +684,10 @@ fitted(full.brm, newdata = rightpanel, scale = "response", re_formula = NA)
 # in mutualistic vs. antagonistic interactions
 
 # color-blind friendly palette from: http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
-cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+# cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+# not good for gray-scale printouts
 
-AvM_colors <- cbPalette[6:7]
+AvM_colors <- c("#d95f02","#1b9e77") # chose new colors using ColorBrewer http://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=3 that are colorblind and print friendly, for a qualitative data display # cbPalette[6:7]
 
 asymmetry_SvG <- plot(marginal_effects(full.brm, effects = "sc.r_ND:type",
                       conditions = data.frame(sc.c_ND = c(-1,1),
@@ -702,15 +697,16 @@ asymmetry_SvG <- plot(marginal_effects(full.brm, effects = "sc.r_ND:type",
   ggplot2::xlab("Resource Normalized Degree (scaled)") +
   ggplot2::scale_color_manual(values = AvM_colors, name = "Interaction type", labels = c("Antagonistic", "Mutualistic")) +
   ggplot2::scale_fill_manual(values = AvM_colors, name = "Interaction type", labels = c("Antagonistic", "Mutualistic")) +
+  # not working # ggplot2::scale_linetype_manual(values = c("solid","dashed"), name = "Interaction type", labels = c("Antagonistic", "Mutualistic")) +
   ggplot2::theme(strip.background = element_blank())
 
 asymmetry_SvG
 ggsave("plots/asymmetry_specialist_vs_generalist.svg")
 ```
 
-In addition to these fixed effects, there is considerable variation in partner fidelity explained by our random effects. In particular, **network_id** has a strong effect compared to the other sources of variation (table \ref{tab:full-table-random}).
+In addition to these fixed effects, there is considerable variation in partner fidelity explained by our random effects. In particular, **network_id** has a strong effect compared to the other sources of variation (fig. \ref{fig:full-table-random-plot}).
 
-```{r full-table-random, echo=FALSE}
+```{r full-table-random, echo=FALSE, include=FALSE}
 tidy(full.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95) %>%
   transmute(Term = term,
             Estimate = round(estimate, 2),
@@ -718,6 +714,23 @@ tidy(full.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95) %>%
             `97.5%` = round(upper, 2)) %>%
   knitr::kable(., caption = "Mean and 95\\% credible intervals of random effects from our full model.", booktabs = T) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+```{r full-table-random-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of random effects from our full model.", out.width="75%", fig.align="center"}
+tidy_full.brm.random <- tidy(full.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95)
+
+tidy_full.brm.random$term.ord <- factor(tidy_full.brm.random$term, 
+                                        levels = c("sd_consumer_sp__Intercept", "sd_resource_sp__Intercept", "sd_id_pair__Intercept", "sd_network_id__Intercept"),
+                                        labels = c("Consumer ID","Resource ID","Pair ID","Network ID"), ordered = T)
+
+tidy_full.brm.random %>%
+  ggplot(., aes(x = term.ord, y = estimate)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey", size = 1.5) +
+  geom_point(size = 3) +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  ylab("Standard Deviations") +
+  xlab("")
 ```
 
 \ 
@@ -754,7 +767,7 @@ no.intercept_brm <- brm(
 
 \ 
 
-```{r no-intercept-table, echo=FALSE}
+```{r no-intercept-table, echo=FALSE, include=FALSE}
 tidy_no.intercept_brm <- tidy(no.intercept_brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) 
 
 tidy_no.intercept_brm %>%
@@ -766,9 +779,25 @@ tidy_no.intercept_brm %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
+```{r no-intercept-table-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of fixed effects from model without intercepts.", out.width="75%", fig.align="center"}
+tidy_no.intercept_brm$term.ord <- factor(tidy_no.intercept_brm$term, 
+                                 levels = c("typeM:sc.r_ND:sc.c_ND", "typeA:sc.r_ND:sc.c_ND", "typeM:sc.c_ND", "typeA:sc.c_ND", "typeM:sc.r_ND", "typeA:sc.r_ND", "subtype_Poll.vs.Disp", "subtype_Herb.vs.Para", "typeM", "typeA"),
+                                 #labels = c("Type:Resource(ND):Consumer(ND)","Resource(ND):Consumer(ND)","Type:Consumer(ND)","Type:Resource(ND)","Consumer(ND)","Resource(ND)","Subtype(Poll-vs-Disp)","Subtype(Herb-vs-Para)","Type(M-vs-A)","Intercept"), 
+                                 ordered = T)
+
+tidy_no.intercept_brm %>%
+  ggplot(., aes(x = term.ord, y = estimate)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey", size = 1.5) +
+  geom_point(size = 3) +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  ylab("Coefficient estimate") +
+  xlab("")
+```
+
 \ 
 
-The results from this model (table \ref{tab:no-intercept-table}) can be interpreted as follows:
+The results from this model (fig. \ref{fig:no-intercept-table-plot}) can be interpreted as follows:
 
 - The average level of partner fidelity for antagonistic interactions is `r round(boot::inv.logit(tidy_no.intercept_brm$estimate[1]), 2)` ($=\frac{\exp(\beta)}{\exp(\beta)+1}$, where $\beta=$ `r round(tidy_no.intercept_brm$estimate[1], 2)`) at the average level of normalized degree for a resource and consumer.
 
@@ -799,7 +828,7 @@ weighted_subset.brm <- brm(
   control = list(adapt_delta = 0.99, max_treedepth = 20))
 ```
 
-```{r weighted-table, echo=FALSE}
+```{r weighted-table, echo=FALSE, include=FALSE}
 tidy(weighted_subset.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) %>%
   transmute(Term = term,
             Estimate = round(estimate, 2),
@@ -809,11 +838,31 @@ tidy(weighted_subset.brm, par_type = "non-varying", intervals = TRUE, prob = 0.9
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-Note that the **Intercept** and effect of **type_M.vs.A** is higher in this subset of data (table \ref{tab:weighted-table}). This is likely due to the fact that herbivory had a tendency to increase partner fidelity (**subtype_Herb.vs.Para** in table \ref{tab:full-table}); therefore, its absence from the data subset enhances the average estimate of partner fidelity as well as the apparent effect of mutualistic interactions. Other terms are similar, except that there is less clear evidence of mutualistic interactions enhancing the effect of resource normalized degree (**type_M.vs.A:sc.r_ND** in table \ref{tab:weighted-table}), and less clear evidence of symmetry in partner normalized degrees to positively affect partner fidelity (**sc.r_ND:sc.c_ND** in table \ref{tab:weighted-table}). Importantly, there is still clear evidence that mutualistic interactions generally enhance partner fidelity (**type_M.vs.A** in table \ref{tab:weighted-table}) and also enhance the effects of *asymmetry* in partner normalized degrees on partner fidelity (**type_M.vs.A:sc.r_ND:sc.c_ND** in table \ref{tab:weighted-table}).
+```{r weighted-table-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of fixed effects from our weighted subset model.", out.width="75%", fig.align="center"}
+tidy_weighted_subset_brm <- tidy(weighted_subset.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95)
 
-As with the full model, we observe a particularly strong effect of **network_id** compared to the other sources of variation (table \ref{tab:weighted-table-random}).
+tidy_weighted_subset_brm$term.ord <- factor(tidy_weighted_subset_brm$term, 
+                                 levels = c("type_M.vs.A:sc.r_ND:sc.c_ND", "sc.r_ND:sc.c_ND", "type_M.vs.A:sc.c_ND", "type_M.vs.A:sc.r_ND", "sc.c_ND",
+                                            "sc.r_ND", "subtype_Poll.vs.Disp", # not present # "subtype_Herb.vs.Para", 
+                                            "type_M.vs.A", "Intercept"),
+                                 #labels = c("Type:Resource(ND):Consumer(ND)","Resource(ND):Consumer(ND)","Type:Consumer(ND)","Type:Resource(ND)","Consumer(ND)","Resource(ND)","Subtype(Poll-vs-Disp)","Subtype(Herb-vs-Para)","Type(M-vs-A)","Intercept"), 
+                                 ordered = T)
 
-```{r weighted-table-random, echo=FALSE}
+tidy_weighted_subset_brm %>%
+  ggplot(., aes(x = term.ord, y = estimate)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey", size = 1.5) +
+  geom_point(size = 3) +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  ylab("Coefficient estimate") +
+  xlab("")
+```
+
+Note that the **Intercept** and effect of **type_M.vs.A** is higher in this subset of data (fig. \ref{fig:weighted-table-plot}). This is likely due to the fact that herbivory had a tendency to increase partner fidelity (**subtype_Herb.vs.Para** in fig. \ref{fig:full-table-plot}); therefore, its absence from the data subset enhances the average estimate of partner fidelity as well as the apparent effect of mutualistic interactions. Other terms are similar, except that there is less clear evidence of mutualistic interactions enhancing the effect of resource normalized degree (**type_M.vs.A:sc.r_ND** in fig. \ref{fig:weighted-table-plot}), and less clear evidence of symmetry in partner normalized degrees to positively affect partner fidelity (**sc.r_ND:sc.c_ND** in fig. \ref{fig:weighted-table-plot}). Importantly, there is still clear evidence that mutualistic interactions generally enhance partner fidelity (**type_M.vs.A** in fig. \ref{fig:weighted-table-plot}) and also enhance the effects of *asymmetry* in partner normalized degrees on partner fidelity (**type_M.vs.A:sc.r_ND:sc.c_ND** in fig. \ref{fig:weighted-table-plot}).
+
+As with the full model, we observe a particularly strong effect of **network_id** compared to the other sources of variation (fig. \ref{fig:weighted-table-random-plot}).
+
+```{r weighted-table-random, echo=FALSE, include=FALSE}
 tidy(weighted_subset.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95) %>%
   transmute(Term = term,
             Estimate = round(estimate, 2),
@@ -823,141 +872,169 @@ tidy(weighted_subset.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
+```{r weighted-table-random-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of random effects from our weighted subset model.", out.width = "75%", fig.align="center"}
+tidy_weighted_subset_brm.random <- tidy(weighted_subset.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95)
+
+tidy_weighted_subset_brm.random$term.ord <- factor(tidy_weighted_subset_brm.random$term, 
+                                                  levels = c("sd_consumer_sp__Intercept", "sd_resource_sp__Intercept", "sd_id_pair__Intercept",
+                                                             "sd_network_id__Intercept"),
+                                                  labels = c("Consumer ID","Resource ID","Pair ID","Network ID"), 
+                                                  ordered = T)
+
+tidy_full.brm.random %>%
+  ggplot(., aes(x = term.ord, y = estimate)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey", size = 1.5) +
+  geom_point(size = 3) +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  ylab("Standard Deviations") +
+  xlab("")
+```
+
 ### Testing for bias due to sampling effort
 
-Our goal here is to test whether sampling effort can explain the results we observed in the previous models, in particular, the three-way statistical interaction with resource and consumer normalized degree. As a reminder, we replaced normalized degree with the log of observed interactions for both resources and consumers. The logic behind this model is that, if we observe a three-way statistical interaction with the observed interactions of resources and consumers, then our previous results could simply be due to variation in sampling effort.
+Our goal here is to test whether variation in sampling effort between mutualistic and antagonistic networks can explain the results we observed in the previous models, in particular, the three-way statistical interaction with resource and consumer normalized degree. 
 
-```{r run sampling effects model, cache=TRUE, results="hide", message=F}
-sampling_effects.brm <- brm(
-  formula = sampling_effects.formula, data = weighted_subset.df, 
-  prior = sampling_effect.priors, algorithm = "sampling", 
-  chains = 4, iter = 2000, warmup = 1000,
-  control = list(adapt_delta = 0.99, max_treedepth = 20))
+Using the subset of weighted data, we first create a long dataset where each row corresponds to an observed interaction.
+
+```{r long dataset, eval=FALSE}
+# focus dataset
+weighted_long <- weighted_subset.df %>%
+  select(network_id, type, subtype, resource_sp, consumer_sp, connected, sum_shared)
+
+# for each interaction, replicate it as many times as it was observed
+weighted_long.list <- list()
+for(i in 1:nrow(weighted_long)){ 
+  if(weighted_long$sum_shared[i] > 0){
+    weighted_long.list[[i]] <- slice(weighted_long[i, ], 
+                                     rep(1:n(), 
+                                         each = weighted_long$sum_shared[i]))
+  } else {
+    weighted_long.list[[i]] <- weighted_long[i, ]
+  }
+}
+
+# tidy into a dataframe
+weighted_long.df <- plyr::ldply(weighted_long.list) %>% 
+  select(-sum_shared)
 ```
 
 \ 
 
-```{r sampling-table, echo=FALSE}
-tidy(sampling_effects.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) %>%
-  transmute(Term = term,
-            Estimate = round(estimate, 2),
-            `2.5%` = round(lower, 2),
-            `97.5%` = round(upper, 2)) %>%
-  knitr::kable(., caption = "Mean and 95\\% credible intervals of fixed effects from our sampling effects model.", booktabs = T) %>%
-  kable_styling(latex_options = c("striped", "hold_position"))
+To control for sampling effort, we conducted the following procedure:
+
+1. Pair each mutualistic network with a random subset of the antagonistic networks;
+2. Randomly subsample each network down to the interaction count of the paired network with the least number of interactions sampled;
+3. Estimate the three-way interaction term for the subsampled data;
+4. Repeat this procedure 1,000 times;
+5. Compare the distribution of estimates to the reference estimated from the subset of networks with weighted data (i.e. point representing **type_M.vs.A:sc.r_ND:sc.c_ND** in fig. \ref{fig:weighted-table-plot}).
+
+```{r subsampling code, eval=FALSE}
+n_sims <- 1000
+three_way.FE <- c() # vector of fixed-effect estimate for three-way interaction term
+three_way.P <- c() # vector of P-values for the three-way term
+for(i in 1:n_sims){
+  # subsample Antagonistic networks to match the number of mutualistic ones
+  subsample_A_networks <- distinct(filter(weighted_long.df, type == "A"), network_id) %>% 
+    sample_n(size = 19, replace = F) 
+  
+  # no need to subsample because there are fewer
+  M_networks <- distinct(filter(weighted_long.df, type == "M"), network_id) 
+  
+  # randomly pair them together (note randomization was already done with subsample_A_networks)
+  random_pairs <- data.frame(network_pairs = LETTERS[1:19],
+                             M = as.character(M_networks$network_id),
+                             A = as.character(subsample_A_networks$network_id))
+  
+  # create data frame to determine subsample size for each network
+  subsample_df <- left_join(random_pairs, 
+                            select(weighted_subset.df.network_level, 
+                                   M = network_id, M_sum = sum_shared)) %>%
+    left_join(., select(weighted_subset.df.network_level, 
+                        A = network_id, A_sum = sum_shared)) %>%
+    # subsample is based on smallest number of observed interactions in a network
+    mutate(subsample_size = ifelse(M_sum < A_sum, M_sum, A_sum)) %>%
+    select(network_pairs, M, A, subsample_size) %>%
+    # organize for joining to other datasets
+    gather(type, network_id, -subsample_size, -network_pairs)
+  
+  # now I need to make the new data frame based on the random subsample
+  new_data <- weighted_long.df %>%
+    # filter to randomly sampled networks
+    filter(network_id %in% c(as.character(M_networks$network_id), 
+                             as.character(subsample_A_networks$network_id))) %>%
+    # following example from: 
+    # https://jennybc.github.io/purrr-tutorial/ls12_different-sized-samples.html
+    # to get different sample sizes for each group
+    group_by(network_id) %>%
+    nest() %>%
+    left_join(., subsample_df) %>%
+    mutate(samp = map2(data, subsample_size, sample_n)) %>%
+    select(-data) %>%
+    unnest(samp) %>%
+    # now that I've subsampled, I can reduce the dataset to the normal size for analysis
+    # i.e. only 1 interaction per pair per network
+    distinct %>%
+    # add back in some data for the analysis
+    # note that sc.r_ND and sc.c_ND are calculated from the original data and 
+    # not the subsampled interactions. this is because their normalized degree 
+    # is based on the entire interaction network rather than their partner fidelity 
+    # across networks
+    left_join(., select(weighted_subset.df, 
+                        network_id, resource_sp, consumer_sp, id_pair, sc.r_ND, sc.c_ND))
+  
+  # run test with glmer
+  # Note that we use a frequentist, rather than Bayesian approach, to calculate 
+  # the three-way interaction term in order to speed up the simulation, but this should not 
+  # matter since our results are not affected by our choice of priors 
+  # (see **Robustness to Different Priors** section).
+  new_glmer <- glmer(connected ~ subtype + type*sc.r_ND*sc.c_ND + 
+                       (1|consumer_sp) + (1|resource_sp) + (1|id_pair) + (1|network_id), 
+                     data = new_data, family = binomial(link = "logit"), 
+                     control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  
+  # get model effects for 3-way interaction term
+  new_glmer_effects <- broom::tidy(new_glmer, effects = "fixed")
+  three_way.FE[i] <- filter(new_glmer_effects, term == "typeM:sc.r_ND:sc.c_ND")$estimate
+  three_way.P[i] <- filter(new_glmer_effects, term == "typeM:sc.r_ND:sc.c_ND")$p.value
+  # print(paste(i/n_sims*100,"% done!")) # track progress
+}
+
+# write data from simulation 
+write_csv(x = data.frame(FixedEffect = three_way.FE, P = three_way.P), 
+          path = "data/three_way_permutation_data.csv")
 ```
 
 
-Inspecting the table of fixed effects (table \ref{tab:sampling-table}), there are a few results worth noting. First, the effect of pollination (relative to seed dispersal) on partner fidelity has reversed; in other words, it now has a negative effect (**subtype_Poll.vs.Disp** in table \ref{tab:sampling-table}). Second, mutualistic interactions increase the positive effect of observed consumer interactions on partner fidelity (**type_M.vs.A:sc.log.sum_c** in table \ref{tab:sampling-table}). Third, we do not see evidence of a three-way interaction between the observed interactions of resources and consumers and interaction type (**type_M.vs.A:sc.log.sum_r:sc.log.sum_c** in table \ref{tab:sampling-table}). This indicates that sampling effects cannot explain the effect of mutualistic interactions on partner fidelity (**type_M.vs.A** in tables \ref{tab:full-table}, \ref{tab:weighted-table}) or the three-way interaction between normalized degree of resources and consumers and interaction type that we observed in previous models (**type_M.vs.A:sc.r_ND:sc.c_ND** in tables \ref{tab:full-table}, \ref{tab:weighted-table}).
+```{r plot subsample of three-way term, echo=FALSE, results="hide", message=F}
+three_way_perms <- read_csv("data/three_way_permutation_data.csv")
 
-The results for the random effects are similar to the other models (tables \ref{tab:full-table-random}, \ref{tab:weighted-table-random}), except that the most important random effect has changed to **id_pair**, although **network_id** is a close second (table \ref{tab:sampling-table-random}).
+# reference statistic based on three-way term in Figure 7 of supplementary material
+ref.FE <- filter(tidy_weighted_subset_brm, term == "type_M.vs.A:sc.r_ND:sc.c_ND")$estimate #-0.68
 
-```{r sampling-table-random, echo=FALSE}
-tidy(sampling_effects.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95) %>%
-  transmute(Term = term,
-            Estimate = round(estimate, 2),
-            `2.5%` = round(lower, 2),
-            `97.5%` = round(upper, 2)) %>%
-  knitr::kable(., caption = "Mean and 95\\% credible intervals of random effects from our sampling effects model.", booktabs = T) %>%
-  kable_styling(latex_options = c("striped", "hold_position"))
-```
+# looks to me like equalizing the sample size doesn't alter the distribution of the test statistic,
+# suggesting that our analysis is robust
+ggplot(three_way_perms, aes(x = FixedEffect)) +
+  geom_histogram(alpha = 0.5, color = "grey") +
+  geom_vline(xintercept = ref.FE, linetype = "dotted") +
+  xlab("Coefficient estimate") +
+  ylab("Count")
 
+# proportion of times that equalizing sample size reduces effect size
+sum(three_way_perms$FixedEffect < ref.FE) / length(three_way_perms$FixedEffect) # 55% of the time.
+# i.e. since the reference statistic is not larger than 90% or more of the subsampled
+# distribution values, then sampling intensity does not matter for our results.
 
-### Alternative models to account for sampling effort
+# proportion of times that equalizing sample size flips the sign of the effect
+sum(three_way_perms$FixedEffect > 0) / length(three_way_perms$FixedEffect) # 2%
 
-In addition to accounting for sampling effort by replacing the normalized degree of the resource and consumer with observed interactions, there are other ways we can account for sampling effort. First, we could fit a model where resource and consumer observed interactions are simply covariates in a model that includes main effects and statistical interactions for resource and consumer normalized degree:
-
-```{r run subset sampling model, cache=TRUE, results="hide", message=F}
-subset.sampling_formula <- brmsformula(
-  connected ~ sc.log.sum_r + sc.log.sum_c + # add covariates
-    type + subtype_Poll.vs.Disp + sc.r_ND + sc.c_ND +
-    type:sc.r_ND + type:sc.c_ND + sc.r_ND:sc.c_ND +
-    type:sc.r_ND:sc.c_ND +
-    (1 | resource_sp) + (1 | consumer_sp) + (1 | id_pair) + (1 | network_id),
-  family = bernoulli(link = "logit"))
-
-subset.sampling_priors <- c(
-  set_prior("normal(1,2)", class = "b", coef = "sc.log.sum_r"),
-  set_prior("normal(1,2)", class = "b", coef = "sc.log.sum_c"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A"),
-  set_prior("normal(0,2)", class = "b", coef = "subtype_Poll.vs.Disp"),
-  set_prior("normal(1,2)", class = "b", coef = "sc.r_ND"),
-  set_prior("normal(1,2)", class = "b", coef = "sc.c_ND"),
-  set_prior("normal(0,2)", class = "b", coef = "sc.r_ND:sc.c_ND"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.r_ND"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.c_ND"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.r_ND:sc.c_ND"),
-  set_prior("normal(0,2)", class = "sd"))
-
-subset.sampling_brm <- brm(
-  formula = subset.sampling_formula, data = weighted_subset.df, 
-  prior = subset.sampling_priors, algorithm = "sampling", 
-  chains = 4, iter = 2000, warmup = 1000, 
-  control = list(adapt_delta = 0.99, max_treedepth = 20))
-```
-
-
-```{r subset-sampling-table, echo=FALSE}
-tidy_subset.sampling_brm <- tidy(subset.sampling_brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) 
-
-tidy_subset.sampling_brm %>%
-  transmute(Term = term,
-            Estimate = round(estimate, 2),
-            `2.5%` = round(lower, 2),
-            `97.5%` = round(upper, 2)) %>%
-  knitr::kable(., caption = "Mean and 95\\% credible intervals of fixed effects from model with main effects for sampling effort.", booktabs = T, linesep = "") %>%
-  kable_styling(latex_options = c("striped", "hold_position"))
+# proportion of times the 3-way interaction is statistically significant
+sum(three_way_perms$P < 0.05) / length(three_way_perms$P) # 35%
 ```
 
 \ 
 
-Second, we can include an additional term that accounts for (a)symmetric effects of observed interactions (i.e., **sc.log.sum_r:sc.log.sum_c**):
-
-```{r run subset sampling model v2, cache=TRUE, results="hide", message=F}
-subset.sampling.v2_formula <- brmsformula(
-  connected ~ sc.log.sum_r + sc.log.sum_c + sc.log.sum_r:sc.log.sum_c +
-    type + subtype_Poll.vs.Disp + sc.r_ND + sc.c_ND +
-    type:sc.r_ND + type:sc.c_ND + sc.r_ND:sc.c_ND +
-    type:sc.r_ND:sc.c_ND +
-    (1 | resource_sp) + (1 | consumer_sp) + (1 | id_pair) + (1 | network_id),
-  family = bernoulli(link = "logit"))
-
-subset.sampling.v2_priors <- c(
-  set_prior("normal(1,2)", class = "b", coef = "sc.log.sum_r"),
-  set_prior("normal(1,2)", class = "b", coef = "sc.log.sum_c"),
-  set_prior("normal(0,2)", class = "b", coef = "sc.log.sum_r:sc.log.sum_c"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A"),
-  set_prior("normal(0,2)", class = "b", coef = "subtype_Poll.vs.Disp"),
-  set_prior("normal(1,2)", class = "b", coef = "sc.r_ND"),
-  set_prior("normal(1,2)", class = "b", coef = "sc.c_ND"),
-  set_prior("normal(0,2)", class = "b", coef = "sc.r_ND:sc.c_ND"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.r_ND"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.c_ND"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.r_ND:sc.c_ND"),
-  set_prior("normal(0,2)", class = "sd"))
-
-subset.sampling.v2_brm <- brm(
-  formula = subset.sampling.v2_formula, data = weighted_subset.df, 
-  prior = subset.sampling.v2_priors, algorithm = "sampling", 
-  chains = 4, iter = 2000, warmup = 1000, 
-  control = list(adapt_delta = 0.99, max_treedepth = 20))
-```
-
-
-```{r subset-sampling-v2-table, echo=FALSE}
-tidy_subset.sampling.v2_brm <- tidy(subset.sampling.v2_brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) 
-
-tidy_subset.sampling.v2_brm %>%
-  transmute(Term = term,
-            Estimate = round(estimate, 2),
-            `2.5%` = round(lower, 2),
-            `97.5%` = round(upper, 2)) %>%
-  knitr::kable(., caption = "Mean and 95\\% credible intervals of fixed effects from model that includes covariates for observed interactions of resources and consumers and their statistical interaction.", booktabs = T, linesep = "") %>%
-  kable_styling(latex_options = c("striped", "hold_position"))
-```
-
-
-Inspecting table \ref{tab:subset-sampling-table} and table \ref{tab:subset-sampling-v2-table}, we see that our key results are robust. Specifically, mutualistic interactions generally enhance partner fidelity and also enhance the effects of *asymmetry* in partner normalized degrees on partner fidelity.
+If variation in sampling effort between mutualistic and antagonistic networks is driving our results, then we should expect our reference estimate for the three-way interaction term to be lower than 90% or more of the subsampled values (i.e. a conservative one-tailed permutation test). In contrast, we see that the reference is lower than only `r round(sum(three_way_perms$FixedEffect > ref.FE) / length(three_way_perms$FixedEffect),2)*100`% of the subsamples. This indicates that variation in sampling effort between mutualistic and antagonistic networks cannot explain our results. 
 
 ## Robustness to Different Priors
 
@@ -972,7 +1049,7 @@ nopriors.brm <- brm(
 ```
 
 
-```{r nopriors-table, echo=FALSE}
+```{r nopriors-table, echo=FALSE, include=FALSE}
 tidy(nopriors.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) %>%
   transmute(Term = term,
             Estimate = round(estimate, 2),
@@ -982,7 +1059,25 @@ tidy(nopriors.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-```{r nopriors-table-random, echo=FALSE}
+```{r nopriors-table-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of fixed effects from our full model.", out.width="75%", fig.align="center"}
+tidy_nopriors.brm <- tidy(nopriors.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95)
+
+tidy_nopriors.brm$term.ord <- factor(tidy_nopriors.brm$term, 
+                                 levels = c("type_M.vs.A:sc.r_ND:sc.c_ND", "sc.r_ND:sc.c_ND", "type_M.vs.A:sc.c_ND", "type_M.vs.A:sc.r_ND", "sc.c_ND", "sc.r_ND", "subtype_Poll.vs.Disp", "subtype_Herb.vs.Para", "type_M.vs.A", "Intercept"),
+                                 #labels = c("Type:Resource(ND):Consumer(ND)","Resource(ND):Consumer(ND)","Type:Consumer(ND)","Type:Resource(ND)","Consumer(ND)","Resource(ND)","Subtype(Poll-vs-Disp)","Subtype(Herb-vs-Para)","Type(M-vs-A)","Intercept"), 
+                                 ordered = T)
+
+tidy_nopriors.brm %>%
+  ggplot(., aes(x = term.ord, y = estimate)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey") +
+  geom_point() +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  ylab("Coefficient estimate") +
+  xlab("")
+```
+
+```{r nopriors-table-random, echo=FALSE, include=FALSE}
 tidy(nopriors.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95) %>%
   transmute(Term = term,
             Estimate = round(estimate, 2),
@@ -992,6 +1087,25 @@ tidy(nopriors.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
+```{r nopriors-table-random-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of random effects from the no priors model.", out.width = "75%", fig.align="center"}
+tidy_nopriors_brm.random <- tidy(nopriors.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95)
+
+tidy_nopriors_brm.random$term.ord <- factor(tidy_nopriors_brm.random$term, 
+                                                  levels = c("sd_consumer_sp__Intercept", "sd_resource_sp__Intercept", "sd_id_pair__Intercept",
+                                                             "sd_network_id__Intercept"),
+                                                  labels = c("Consumer ID","Resource ID","Pair ID","Network ID"), 
+                                                  ordered = T)
+
+tidy_nopriors_brm.random %>%
+  ggplot(., aes(x = term.ord, y = estimate)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey") +
+  geom_point() +
+  coord_flip() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  ylab("Standard Deviations") +
+  xlab("")
+```
+
 \
 
-There is an incredibly close correspondence between these results (tables \ref{tab:nopriors-table}, \ref{tab:nopriors-table-random}) and the one where we specified the priors (tables \ref{tab:full-table}, \ref{tab:full-table-random}), indicating that our results are robust.
+There is a close correspondence between these results (tables \ref{fig:nopriors-table-plot}, \ref{fig:nopriors-table-random-plot}) and the one where we specified the priors (tables \ref{fig:full-table-plot}, \ref{fig:full-table-random-plot}), indicating that our results are robust.
