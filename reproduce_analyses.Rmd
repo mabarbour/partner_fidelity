@@ -71,7 +71,7 @@ options(mc.cores=parallel::detectCores ())
 
 \newpage
 
-All data and code to reproduce the analyses presented below are available on GitHub (https://github.com/mabarbour/partner_fidelity) and have been archived on Zenodo (https://doi.org/10.5281/zenodo.3246344).
+All data and code to reproduce the analyses presented below are available on GitHub (https://github.com/mabarbour/partner_fidelity) and have been archived on Zenodo (https://zenodo.org/badge/latestdoi/107263795).
 
 ## Dataset
 
@@ -97,7 +97,7 @@ sample_n(full.df, size=10) %>%
 - **network_id**: ecological network ID (n = `r length(unique(full.df$network_id))`; labels match those on the [Web of Life](http://www.web-of-life.es/))
 
 
-We also analyze a subset of this data that only consists of weighted networks (table \ref{tab:weighted-subset-dataset}), which we use to investigate the effects of sampling effort. 
+We also analyze a subset of these data that only consists of weighted networks (table \ref{tab:weighted-subset-dataset}), which we use to investigate the effects of sampling effort. 
 
 ```{r weighted-subset-dataset, echo=FALSE}
 sample_n(weighted_subset.df, size=10) %>%
@@ -896,7 +896,7 @@ tidy_full.brm.random %>%
 
 ### Testing for bias due to sampling effort
 
-Our goal here is to test whether variation in sampling effort between mutualistic and antagonistic networks can explain the results we observed in the previous models, in particular, the three-way statistical interaction with resource and consumer normalized degree. 
+Our goal here is to test whether variation in sampling effort between mutualistic and antagonistic networks could explain the results we observed in the previous models, in particular, the three-way statistical interaction with resource and consumer normalized degree. 
 
 Using the subset of weighted data, we first create a long dataset where each row corresponds to an observed interaction.
 
@@ -1037,7 +1037,7 @@ sum(three_way_perms$P < 0.05) / length(three_way_perms$P) # 35%
 
 \ 
 
-If variation in sampling effort between mutualistic and antagonistic networks is driving our results, then we should expect our reference estimate for the three-way interaction term to be lower than 90% or more of the subsampled values (i.e. a conservative one-tailed permutation test). In contrast, we see that the reference is lower than only `r round(sum(three_way_perms$FixedEffect > ref.FE) / length(three_way_perms$FixedEffect),2)*100`% of the subsamples. This indicates that variation in sampling effort between mutualistic and antagonistic networks cannot explain our results. 
+If variation in sampling effort between mutualistic and antagonistic networks were driving our results, then we should expect our reference estimate for the three-way interaction term to be lower than 90% or more of the subsampled values (i.e. a conservative one-tailed permutation test). In contrast, we see that the reference is lower than only `r round(sum(three_way_perms$FixedEffect > ref.FE) / length(three_way_perms$FixedEffect),2)*100`% of the subsamples. This indicates that variation in sampling effort between mutualistic and antagonistic networks cannot explain our results. 
 
 ## Robustness to Different Priors
 
