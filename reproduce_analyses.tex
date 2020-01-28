@@ -18,17 +18,18 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
-\hypersetup{unicode=true,
+\hypersetup{
             pdftitle={Partner fidelity and asymmetric specialization in ecological networks},
             colorlinks=true,
-            linkcolor=black,
+            linkcolor=blue,
             citecolor=black,
-            urlcolor=black,
+            urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{natbib}
@@ -100,31 +101,11 @@
 \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
 
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
 
-%%% Change title format to be more compact
-\usepackage{titling}
-
-% Create subtitle command for use in maketitle
-\providecommand{\subtitle}[1]{
-  \posttitle{
-    \begin{center}\large#1\end{center}
-    }
-}
-
-\setlength{\droptitle}{-2em}
-
-  \title{Partner fidelity and asymmetric specialization in ecological networks}
-    \pretitle{\vspace{\droptitle}\centering\huge}
-  \posttitle{\par}
-  \subtitle{Supplementary material}
-  \author{}
-    \preauthor{}\postauthor{}
-    \date{}
-    \predate{}\postdate{}
-  
 %%% Modified from Latex Template for Am. Nat., many other details aren't necessary because they are specified in YAML header of Rmarkdown document.
 \usepackage{fullpage}
 \linespread{1.7}
@@ -139,6 +120,12 @@
 } {
     \endorigfigure
 }
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -153,6 +140,12 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
+
+\title{Partner fidelity and asymmetric specialization in ecological networks}
+\providecommand{\subtitle}[1]{}
+\subtitle{Supplementary material}
+\author{}
+\date{\vspace{-2.5em}}
 
 \begin{document}
 \maketitle
@@ -171,7 +164,7 @@ archived on Zenodo (\url{https://zenodo.org/badge/latestdoi/107263795}).
 
 \subsection{Dataset}\label{dataset}
 
-Here's a summary of the full dataset we used in our analyses (table
+Here is a summary of the full dataset we used in our analyses (table
 \ref{tab:full-dataset}).
 
 \begin{table}[!h]
@@ -179,7 +172,7 @@ Here's a summary of the full dataset we used in our analyses (table
 \caption{\label{tab:full-dataset}Random sample of 10 rows from the full dataset.}
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}{rllrrllll}
+\begin{tabular}[t]{rllrrllll}
 \toprule
 connected & type & subtype & r\_ND & c\_ND & resource\_sp & consumer\_sp & id\_pair & network\_id\\
 \midrule
@@ -234,7 +227,7 @@ investigate the effects of sampling effort.
 \caption{\label{tab:weighted-subset-dataset}Random sample of 10 rows from the subset of weighted networks.}
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}{rllrrrllll}
+\begin{tabular}[t]{rllrrrllll}
 \toprule
 connected & type & subtype & r\_ND & c\_ND & sum\_shared & resource\_sp & consumer\_sp & id\_pair & network\_id\\
 \midrule
@@ -317,7 +310,7 @@ interactions (table \ref{tab:type-contrasts}).
 
 \caption{\label{tab:type-contrasts}Contrasts for \textbf{type}.}
 \centering
-\begin{tabular}{lrr}
+\begin{tabular}[t]{lrr}
 \toprule
   & A & M\\
 \midrule
@@ -418,45 +411,22 @@ approach to estimate our model's parameters (as advised by
 et al. 2008}). This required us to choose prior distributions for the
 fixed and random effects in our model.
 
-We specified the following priors in our models:
+Table \ref{tab:compact-priors} provides a summary of the priors we
+specified for each term in our models.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{interaction.priors <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"subtype_Herb.vs.Para"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"subtype_Poll.vs.Disp"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(1,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.r_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(1,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.c_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.r_ND:sc.c_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.r_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.c_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.r_ND:sc.c_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"sd"}\NormalTok{))}
+\begin{table}[!h]
 
-\NormalTok{interaction_subset.priors <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"subtype_Poll.vs.Disp"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(1,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.r_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(1,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.c_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.r_ND:sc.c_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.r_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.c_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.r_ND:sc.c_ND"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"sd"}\NormalTok{))}
-
-\NormalTok{sampling_effect.priors <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"subtype_Poll.vs.Disp"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(1,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.log.sum_r"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(1,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.log.sum_c"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"sc.log.sum_r:sc.log.sum_c"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.log.sum_r"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.log.sum_c"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{coef =} \StringTok{"type_M.vs.A:sc.log.sum_r:sc.log.sum_c"}\NormalTok{),}
-  \KeywordTok{set_prior}\NormalTok{(}\StringTok{"normal(0,2)"}\NormalTok{, }\DataTypeTok{class =} \StringTok{"sd"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
+\caption{\label{tab:compact-priors}Summary of prior distributions.}
+\centering
+\begin{tabular}[t]{l>{\raggedright\arraybackslash}p{6cm}}
+\toprule
+Prior\_distribution & Model\_term\\
+\midrule
+\rowcolor{gray!6}  Normal(mean = 0, SD = 2) & type\_M.vs.A; subtype\_Herb.vs.Para; subtype\_Poll.vs.Disp; sc.r\_ND:sc.c\_ND; type\_M.vs.A:sc.r\_ND; type\_M.vs.A:sc.c\_ND; type\_M.vs.A:sc.r\_ND:sc.c\_ND\\
+Normal(mean = 1, SD = 2) & sc.r\_ND; sc.c\_ND\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 Choosing priors requires thinking on the scale of the model. Therefore,
 we first give a description of what each term quantifies in these models
@@ -697,9 +667,9 @@ resources and consumers.
 \centering
 \includegraphics{reproduce_analyses_files/figure-latex/plot-NDxND-1.pdf}
 \caption{\label{fig:plot-NDxND}Plot of how the sign of the statistical
-interaction between resource and consumer normalized degrees
+interaction between resource and consumer normalized degree
 (b\_sc.r\_ND:sc.c\_ND) determines how symmetry (right panel) or
-asymmetry (left panel) in partners normalized degree affects partner
+asymmetry (left panel) in partner normalized degree affects partner
 fidelity.}
 \end{figure}
 
@@ -809,7 +779,7 @@ variance.
 
 \begin{verbatim}
 ##     Estimate   Est.Error      Q2.5     Q97.5
-## R2 0.4010955 0.006517277 0.3883389 0.4139209
+## R2 0.4009361 0.006391404 0.3883897 0.4134291
 \end{verbatim}
 
 ~
@@ -820,8 +790,8 @@ Below, we give a biological interpretation of each term in this model
 \begin{itemize}
 \item
   On the probability scale, the average level of partner fidelity across
-  interaction types equals 0.65(\(=\frac{\exp(\beta)}{\exp(\beta)+1}\),
-  where \(\beta=\) 0.63) for the average level of normalized degree for
+  interaction types equals 0.66(\(=\frac{\exp(\beta)}{\exp(\beta)+1}\),
+  where \(\beta=\) 0.64) for the average level of normalized degree for
   a resource and consumer.
 \item
   Mutualistic interactions increase the log odds of partner fidelity by
@@ -830,8 +800,8 @@ Below, we give a biological interpretation of each term in this model
   There is no clear difference between herbivory and parasitism on
   partner fidelity (95\% credible intervals overlap with zero).
 \item
-  Pollination increases the log odds of partner fidelity by 2.6 relative
-  to seed dispersers.
+  Pollination increases the log odds of partner fidelity by 2.59
+  relative to seed dispersers.
 \item
   A 1 SD increase in resource normalized degree increases the log odds
   of partner fidelity by 2 across interaction types.
@@ -909,6 +879,12 @@ degree for both mutualistic and antagonistic interactions.
 \end{Highlighting}
 \end{Shaded}
 
+\begin{verbatim}
+## Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+## Running the chains for more iterations may help. See
+## http://mc-stan.org/misc/warnings.html#tail-ess
+\end{verbatim}
+
 ~
 
 \begin{figure}
@@ -928,7 +904,7 @@ be interpreted as follows:
 \begin{itemize}
 \item
   The average level of partner fidelity for antagonistic interactions is
-  0.47 (\(=\frac{\exp(\beta)}{\exp(\beta)+1}\), where \(\beta=\) -0.12)
+  0.47 (\(=\frac{\exp(\beta)}{\exp(\beta)+1}\), where \(\beta=\) -0.13)
   at the average level of normalized degree for a resource and consumer.
 \item
   The average probability of partner fidelity for mutualistic
@@ -979,24 +955,23 @@ whether we observe the same results for the data subset.
 \caption{Mean and 95\% credible intervals of fixed effects from our weighted subset model.}\label{fig:weighted-table-plot}
 \end{figure}
 
-Note that the \textbf{Intercept} and effect of \textbf{type\_M.vs.A} is
-higher in this subset of data (fig. \ref{fig:weighted-table-plot}). This
-is likely due to the fact that herbivory had a tendency to increase
-partner fidelity (\textbf{subtype\_Herb.vs.Para} in fig.
-\ref{fig:full-table-plot}); therefore, its absence from the data subset
-enhances the average estimate of partner fidelity as well as the
-apparent effect of mutualistic interactions. Other terms are similar,
-except that there is less clear evidence of mutualistic interactions
-enhancing the effect of resource normalized degree
-(\textbf{type\_M.vs.A:sc.r\_ND} in fig. \ref{fig:weighted-table-plot}),
-and less clear evidence of symmetry in partner normalized degrees to
-positively affect partner fidelity (\textbf{sc.r\_ND:sc.c\_ND} in fig.
-\ref{fig:weighted-table-plot}). Importantly, there is still clear
-evidence that mutualistic interactions generally enhance partner
-fidelity (\textbf{type\_M.vs.A} in fig. \ref{fig:weighted-table-plot})
-and also enhance the effects of \emph{asymmetry} in partner normalized
-degrees on partner fidelity (\textbf{type\_M.vs.A:sc.r\_ND:sc.c\_ND} in
-fig. \ref{fig:weighted-table-plot}).
+Note that the effect of \textbf{type\_M.vs.A} is higher in this subset
+of data (fig. \ref{fig:weighted-table-plot}). This is likely due to the
+fact that herbivory had a tendency to increase partner fidelity
+(\textbf{subtype\_Herb.vs.Para} in fig. \ref{fig:full-table-plot});
+therefore, its absence from the data subset enhances the the apparent
+effect of mutualistic interactions. Other terms are similar, except that
+there is less clear evidence of mutualistic interactions enhancing the
+effect of resource normalized degree (\textbf{type\_M.vs.A:sc.r\_ND} in
+fig. \ref{fig:weighted-table-plot}), and less clear evidence of symmetry
+in partner normalized degrees to positively affect partner fidelity
+(\textbf{sc.r\_ND:sc.c\_ND} in fig. \ref{fig:weighted-table-plot}).
+Importantly, there is still clear evidence that mutualistic interactions
+generally enhance partner fidelity (\textbf{type\_M.vs.A} in fig.
+\ref{fig:weighted-table-plot}) and also enhance the effects of
+\emph{asymmetry} in partner normalized degrees on partner fidelity
+(\textbf{type\_M.vs.A:sc.r\_ND:sc.c\_ND} in fig.
+\ref{fig:weighted-table-plot}).
 
 As with the full model, we observe a particularly strong effect of
 \textbf{network\_id} compared to the other sources of variation (fig.
@@ -1157,7 +1132,7 @@ networks were driving our results, then we should expect our reference
 estimate for the three-way interaction term to be lower than 90\% or
 more of the subsampled values (i.e.~a conservative one-tailed
 permutation test). In contrast, we see that the reference is lower than
-only 55\% of the subsamples. This indicates that variation in sampling
+only 53\% of the subsamples. This indicates that variation in sampling
 effort between mutualistic and antagonistic networks cannot explain our
 results.
 
@@ -1180,13 +1155,15 @@ the posterior sampling of this model.
 \end{Highlighting}
 \end{Shaded}
 
+~
+
 \begin{figure}
 
 {\centering \includegraphics[width=0.75\linewidth]{reproduce_analyses_files/figure-latex/nopriors-table-plot-1} 
 
 }
 
-\caption{Mean and 95\% credible intervals of fixed effects from our full model.}\label{fig:nopriors-table-plot}
+\caption{Comparing mean and 95\% credible intervals of fixed effects from our full model with default vs. regularizing priors.}\label{fig:nopriors-table-plot}
 \end{figure}
 
 \begin{figure}
@@ -1195,7 +1172,7 @@ the posterior sampling of this model.
 
 }
 
-\caption{Mean and 95\% credible intervals of random effects from the no priors model.}\label{fig:nopriors-table-random-plot}
+\caption{Comparing mean and 95\% credible intervals of random effects from our full model with default vs. regularizing priors.}\label{fig:nopriors-table-random-plot}
 \end{figure}
 
 There is a close correspondence between these results (tables
@@ -1205,6 +1182,5 @@ the one where we specified the priors (tables \ref{fig:full-table-plot},
 robust.
 
 \bibliography{references}
-
 
 \end{document}

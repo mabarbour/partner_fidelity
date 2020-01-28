@@ -19,8 +19,8 @@ bibliography: references
 fontsize: 11pt
 fontfamily: mathpazo
 documentclass: article
-linkcolor: black
-urlcolor: black
+linkcolor: blue
+urlcolor: blue
 citecolor: black
 ---
 
@@ -67,6 +67,9 @@ weighted_subset.df <- read_csv("data/weighted_subset.csv") %>%
 
 # set the number of cores for model
 options(mc.cores=parallel::detectCores ()) 
+
+# set figure theme
+theme_set(theme_cowplot())
 ```
 
 \newpage
@@ -75,7 +78,7 @@ All data and code to reproduce the analyses presented below are available on Git
 
 ## Dataset
 
-Here's a summary of the full dataset we used in our analyses (table \ref{tab:full-dataset}).
+Here is a summary of the full dataset we used in our analyses (table \ref{tab:full-dataset}).
 
 ```{r full-dataset, echo=FALSE}
 sample_n(full.df, size=10) %>%
@@ -291,9 +294,18 @@ get_prior(interaction.formula, data = full.df, family = bernoulli()) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-We specified the following priors in our models:
+Table \ref{tab:compact-priors} provides a summary of the priors we specified for each term in our models. 
 
-```{r set priors}
+```{r compact-priors, echo = F}
+data.frame(Prior_distribution = c("Normal(mean = 0, SD = 2)","Normal(mean = 1, SD = 2)"),
+           Model_term = c("type_M.vs.A; subtype_Herb.vs.Para; subtype_Poll.vs.Disp; sc.r_ND:sc.c_ND; type_M.vs.A:sc.r_ND; type_M.vs.A:sc.c_ND; type_M.vs.A:sc.r_ND:sc.c_ND","sc.r_ND; sc.c_ND")) %>%
+  kable(., caption = "Summary of prior distributions.", booktabs = T) %>%
+  kableExtra::column_spec(column = 2, width = "6cm") %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+```
+
+
+```{r set priors, echo=FALSE}
 interaction.priors <- c(
   set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A"),
   set_prior("normal(0,2)", class = "b", coef = "subtype_Herb.vs.Para"),
@@ -315,17 +327,6 @@ interaction_subset.priors <- c(
   set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.r_ND"),
   set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.c_ND"),
   set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.r_ND:sc.c_ND"),
-  set_prior("normal(0,2)", class = "sd"))
-
-sampling_effect.priors <- c(
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A"),
-  set_prior("normal(0,2)", class = "b", coef = "subtype_Poll.vs.Disp"),
-  set_prior("normal(1,2)", class = "b", coef = "sc.log.sum_r"),
-  set_prior("normal(1,2)", class = "b", coef = "sc.log.sum_c"),
-  set_prior("normal(0,2)", class = "b", coef = "sc.log.sum_r:sc.log.sum_c"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.log.sum_r"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.log.sum_c"),
-  set_prior("normal(0,2)", class = "b", coef = "type_M.vs.A:sc.log.sum_r:sc.log.sum_c"),
   set_prior("normal(0,2)", class = "sd"))
 ```
 
@@ -501,7 +502,7 @@ sim.log.odds <- expand.grid(
          diff.log.odds = log.odds.connected - main.log.odds)
 ```
 
-```{r plot-NDxND, echo=F, fig.cap="\\label{fig:plot-NDxND}Plot of how the sign of the statistical interaction between resource and consumer normalized degrees (b_sc.r_ND:sc.c_ND) determines how symmetry (right panel) or asymmetry (left panel) in partners normalized degree affects partner fidelity.", warning=FALSE}
+```{r plot-NDxND, echo=F, fig.cap="\\label{fig:plot-NDxND}Plot of how the sign of the statistical interaction between resource and consumer normalized degree (b_sc.r_ND:sc.c_ND) determines how symmetry (right panel) or asymmetry (left panel) in partner normalized degree affects partner fidelity.", warning=FALSE}
 labels_2D <- list("-1"="Coefficient of normalized degree interaction\n(b_sc.r_ND:sc.c_ND) = -1", "1"="Coefficient of normalized degree interaction\n(b_sc.r_ND:sc.c_ND) = 1")
 labeller_2D <- function(variable, value) {
   return(labels_2D[value])
@@ -613,6 +614,7 @@ tidy_full.brm$term.ord <- factor(tidy_full.brm$term,
                                  ordered = T)
 
 full_table_plot <- tidy_full.brm %>%
+  filter(term.ord != "Intercept") %>%
   ggplot(., aes(x = term.ord, y = estimate)) +
   geom_linerange(aes(ymin = lower, ymax = upper), color = "grey", size = 1.5) +
   geom_point(size = 3) +
@@ -852,6 +854,7 @@ tidy_weighted_subset_brm$term.ord <- factor(tidy_weighted_subset_brm$term,
                                  ordered = T)
 
 tidy_weighted_subset_brm %>%
+  filter(term.ord != "Intercept") %>%
   ggplot(., aes(x = term.ord, y = estimate)) +
   geom_linerange(aes(ymin = lower, ymax = upper), color = "grey", size = 1.5) +
   geom_point(size = 3) +
@@ -861,7 +864,7 @@ tidy_weighted_subset_brm %>%
   xlab("")
 ```
 
-Note that the **Intercept** and effect of **type_M.vs.A** is higher in this subset of data (fig. \ref{fig:weighted-table-plot}). This is likely due to the fact that herbivory had a tendency to increase partner fidelity (**subtype_Herb.vs.Para** in fig. \ref{fig:full-table-plot}); therefore, its absence from the data subset enhances the average estimate of partner fidelity as well as the apparent effect of mutualistic interactions. Other terms are similar, except that there is less clear evidence of mutualistic interactions enhancing the effect of resource normalized degree (**type_M.vs.A:sc.r_ND** in fig. \ref{fig:weighted-table-plot}), and less clear evidence of symmetry in partner normalized degrees to positively affect partner fidelity (**sc.r_ND:sc.c_ND** in fig. \ref{fig:weighted-table-plot}). Importantly, there is still clear evidence that mutualistic interactions generally enhance partner fidelity (**type_M.vs.A** in fig. \ref{fig:weighted-table-plot}) and also enhance the effects of *asymmetry* in partner normalized degrees on partner fidelity (**type_M.vs.A:sc.r_ND:sc.c_ND** in fig. \ref{fig:weighted-table-plot}).
+Note that the <!--**Intercept** and -->effect of **type_M.vs.A** is higher in this subset of data (fig. \ref{fig:weighted-table-plot}). This is likely due to the fact that herbivory had a tendency to increase partner fidelity (**subtype_Herb.vs.Para** in fig. \ref{fig:full-table-plot}); therefore, its absence from the data subset enhances the <!--average estimate of partner fidelity as well as -->the apparent effect of mutualistic interactions. Other terms are similar, except that there is less clear evidence of mutualistic interactions enhancing the effect of resource normalized degree (**type_M.vs.A:sc.r_ND** in fig. \ref{fig:weighted-table-plot}), and less clear evidence of symmetry in partner normalized degrees to positively affect partner fidelity (**sc.r_ND:sc.c_ND** in fig. \ref{fig:weighted-table-plot}). Importantly, there is still clear evidence that mutualistic interactions generally enhance partner fidelity (**type_M.vs.A** in fig. \ref{fig:weighted-table-plot}) and also enhance the effects of *asymmetry* in partner normalized degrees on partner fidelity (**type_M.vs.A:sc.r_ND:sc.c_ND** in fig. \ref{fig:weighted-table-plot}).
 
 As with the full model, we observe a particularly strong effect of **network_id** compared to the other sources of variation (fig. \ref{fig:weighted-table-random-plot}).
 
@@ -1051,6 +1054,7 @@ nopriors.brm <- brm(
   control = list(adapt_delta = 0.999, max_treedepth = 20))
 ```
 
+\ 
 
 ```{r nopriors-table, echo=FALSE, include=FALSE}
 tidy(nopriors.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) %>%
@@ -1062,7 +1066,7 @@ tidy(nopriors.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-```{r nopriors-table-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of fixed effects from our full model.", out.width="75%", fig.align="center"}
+```{r nopriors-table-plot, echo=FALSE, fig.cap = "Comparing mean and 95\\% credible intervals of fixed effects from our full model with default vs. regularizing priors.", out.width="75%", fig.align="center"}
 tidy_nopriors.brm <- tidy(nopriors.brm, par_type = "non-varying", intervals = TRUE, prob = 0.95)
 
 tidy_nopriors.brm$term.ord <- factor(tidy_nopriors.brm$term, 
@@ -1070,12 +1074,15 @@ tidy_nopriors.brm$term.ord <- factor(tidy_nopriors.brm$term,
                                  #labels = c("Type:Resource(ND):Consumer(ND)","Resource(ND):Consumer(ND)","Type:Consumer(ND)","Type:Resource(ND)","Consumer(ND)","Resource(ND)","Subtype(Poll-vs-Disp)","Subtype(Herb-vs-Para)","Type(M-vs-A)","Intercept"), 
                                  ordered = T)
 
-tidy_nopriors.brm %>%
-  ggplot(., aes(x = term.ord, y = estimate)) +
-  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey") +
-  geom_point() +
+bind_rows(mutate(tidy_nopriors.brm, Prior_type = "Default"),
+          mutate(tidy_full.brm, Prior_type = "Regularizing")) %>%
+  filter(term.ord != "Intercept") %>%
+  ggplot(., aes(x = term.ord, y = estimate, color = Prior_type)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), position = position_dodge(width = 0.5)) +
+  geom_point(position = position_dodge(width = 0.5)) +
   coord_flip() +
   geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_color_manual(values = c("black","grey"), name = "Prior type") +
   ylab("Coefficient estimate") +
   xlab("")
 ```
@@ -1090,7 +1097,7 @@ tidy(nopriors.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
 ```
 
-```{r nopriors-table-random-plot, echo=FALSE, fig.cap = "Mean and 95\\% credible intervals of random effects from the no priors model.", out.width = "75%", fig.align="center"}
+```{r nopriors-table-random-plot, echo=FALSE, fig.cap = "Comparing mean and 95\\% credible intervals of random effects from our full model with default vs. regularizing priors.", out.width = "75%", fig.align="center"}
 tidy_nopriors_brm.random <- tidy(nopriors.brm, par_type = "hierarchical", intervals = TRUE, prob = 0.95)
 
 tidy_nopriors_brm.random$term.ord <- factor(tidy_nopriors_brm.random$term, 
@@ -1099,12 +1106,14 @@ tidy_nopriors_brm.random$term.ord <- factor(tidy_nopriors_brm.random$term,
                                                   labels = c("Consumer ID","Resource ID","Pair ID","Network ID"), 
                                                   ordered = T)
 
-tidy_nopriors_brm.random %>%
-  ggplot(., aes(x = term.ord, y = estimate)) +
-  geom_linerange(aes(ymin = lower, ymax = upper), color = "grey") +
-  geom_point() +
+bind_rows(mutate(tidy_nopriors_brm.random, Prior_type = "Default"),
+          mutate(tidy_full.brm.random, Prior_type = "Regularizing")) %>%
+  ggplot(., aes(x = term.ord, y = estimate, color = Prior_type)) +
+  geom_linerange(aes(ymin = lower, ymax = upper), position = position_dodge(width = 0.5)) +
+  geom_point(position = position_dodge(width = 0.5)) +
   coord_flip() +
   geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_color_manual(values = c("black","grey"), name = "Prior type") +
   ylab("Standard Deviations") +
   xlab("")
 ```

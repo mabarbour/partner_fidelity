@@ -16,3 +16,6 @@ broom
 kableExtra
 gmodels
 codingMatrices
+Matrix
+lme4
+gdtools
